@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-15T19:56:55.270Z",
+  "generatedAt": "2026-10-15T20:05:30.631Z",
   "collections": [
     {
       "name": "users",
@@ -7,9 +7,9 @@
       "apiRules": {
         "list": "id = @request.auth.id",
         "view": "id = @request.auth.id",
-        "create": "",
+        "create": null,
         "update": "id = @request.auth.id",
-        "delete": "id = @request.auth.id"
+        "delete": null
       },
       "fields": [
         {
@@ -29,14 +29,19 @@
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate"]
+          "autodateTriggers": [
+            "onCreate"
+          ]
         },
         {
           "name": "updated",
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate", "onUpdate"]
+          "autodateTriggers": [
+            "onCreate",
+            "onUpdate"
+          ]
         }
       ],
       "indexes": [
