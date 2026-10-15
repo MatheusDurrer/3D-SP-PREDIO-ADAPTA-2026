@@ -21,13 +21,7 @@ migrate(
       max,
       onlyInt,
     })
-    const select = (name, values) => ({
-      name,
-      type: 'select',
-      values,
-      maxSelect: 1,
-      required: true,
-    })
+
     const file = (name, maxSelect, mimeTypes, maxSize) => ({
       name,
       type: 'file',
@@ -65,7 +59,13 @@ migrate(
       [
         { ...text('slug', 80, true), min: 3, pattern: '^[a-z0-9]+(-[a-z0-9]+)*$' },
         text('nome', 120, true),
-        select('status', ['lancamento', 'obras', 'futuro', 'entregue']),
+        {
+          name: 'status',
+          type: 'select',
+          values: ['lancamento', 'obras', 'futuro', 'entregue'],
+          maxSelect: 1,
+          required: true,
+        },
         num('ano_entrega', 1800, 2100, true),
         text('endereco', 200, true),
         text('bairro', 80, true),
@@ -94,7 +94,13 @@ migrate(
       'sp3d_pois',
       [
         text('nome', 120, true),
-        select('tipo', ['metro', 'trem', 'hospital', 'parque', 'escola', 'shopping']),
+        {
+          name: 'tipo',
+          type: 'select',
+          values: ['metro', 'trem', 'hospital', 'parque', 'escola', 'shopping'],
+          maxSelect: 1,
+          required: true,
+        },
         ...coord(),
         text('linha', 60),
       ],
@@ -143,7 +149,13 @@ migrate(
         { name: 'email', type: 'email' },
         text('mensagem', 2000),
         rel('empreendimento', 'sp3d_empreendimentos'),
-        select('origem', ['formulario', 'whatsapp']),
+        {
+          name: 'origem',
+          type: 'select',
+          values: ['formulario', 'whatsapp'],
+          maxSelect: 1,
+          required: true,
+        },
         text('ip_hash', 64),
       ],
       admin,
@@ -156,7 +168,13 @@ migrate(
     create(
       'sp3d_eventos',
       [
-        select('tipo', ['sessao', 'abriu_imovel', 'ver_calcada', 'lead']),
+        {
+          name: 'tipo',
+          type: 'select',
+          values: ['sessao', 'abriu_imovel', 'ver_calcada', 'lead'],
+          maxSelect: 1,
+          required: true,
+        },
         rel('empreendimento', 'sp3d_empreendimentos'),
         text('dispositivo', 40),
         num('duracao_s', 0, 86400, true),
