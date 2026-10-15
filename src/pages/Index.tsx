@@ -1,12 +1,50 @@
-/* Home Page - Replace this page layout, components, content, behavior with what you want and translate to the language of the user */
-const Index = () => {
-  return (
-    <div className="container mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold mb-6">
-        This is a example page ready to be rewritten with your own content
+const Index = () => (
+  <main className="min-h-screen bg-slate-950 text-slate-200 px-6 py-16 flex items-center justify-center">
+    <section className="max-w-xl space-y-6" aria-labelledby="project-title">
+      <p className="text-sm uppercase tracking-[0.3em] text-amber-300">
+        São Paulo 3D · Validação de dados
+      </p>
+      <h1 id="project-title" className="text-4xl font-light leading-tight">
+        Uma cidade real começa com dados reais.
       </h1>
-    </div>
-  )
-}
-
+      <p className="text-slate-400 leading-relaxed">
+        Este projeto está na fase de validação das fontes e do piloto geoespacial. A réplica 3D
+        ainda não está disponível. Contornos, relevo e alturas precisam passar pelos critérios de
+        fidelidade antes da experiência visual.
+      </p>
+      <aside className="border border-slate-700 rounded-xl p-5 text-sm leading-relaxed">
+        <h2 className="text-slate-100 font-medium mb-2">Piloto do eixo sudoeste</h2>
+        <p>
+          Pinheiros, Jardins, Itaim, Vila Olímpia, Moema e Ibirapuera. Nenhuma cobertura, precisão
+          ou performance foi aprovada nesta etapa.
+        </p>
+      </aside>
+      <p className="text-xs text-slate-500">
+        Projeto técnico em construção. Não é uma demonstração da cidade concluída.
+      </p>
+      <footer className="text-xs text-slate-400 border-t border-slate-800 pt-5 space-y-2">
+        <p>Fontes previstas no PRD — uso e licenças em validação:</p>
+        <p>
+          <a
+            className="underline underline-offset-4"
+            href="https://geosampa.prefeitura.sp.gov.br/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Prefeitura de São Paulo / GeoSampa
+          </a>{' '}
+          ·{' '}
+          <a
+            className="underline underline-offset-4"
+            href="https://www.openstreetmap.org/copyright"
+            target="_blank"
+            rel="noreferrer"
+          >
+            © OpenStreetMap contributors · ODbL
+          </a>
+        </p>
+      </footer>
+    </section>
+  </main>
+)
 export default Index
