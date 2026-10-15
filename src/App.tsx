@@ -1,4 +1,4 @@
-/* Main App Component - Handles routing (using react-router-dom), query client and other providers - use this file to add all routes */
+/* Main App Component - Handles routing (using react-router-dom), query client and other providers */
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Toaster } from '@/components/ui/toaster'
 import { Toaster as Sonner } from '@/components/ui/sonner'
@@ -6,7 +6,12 @@ import { TooltipProvider } from '@/components/ui/tooltip'
 import Index from './pages/Index'
 import NotFound from './pages/NotFound'
 import Layout from './components/Layout'
-import AdminRoutes from './pages/admin/AdminRoutes'
+import { RequireAdmin } from '@/components/admin/RequireAdmin'
+import AdminLayout from '@/components/admin/AdminLayout'
+import AdminLogin from './pages/admin/AdminLogin'
+import EmpreendimentoList from './pages/admin/EmpreendimentoList'
+import EmpreendimentoForm from './pages/admin/EmpreendimentoForm'
+import LeadsView from './pages/admin/LeadsView'
 
 // ONLY IMPORT AND RENDER WORKING PAGES, NEVER ADD PLACEHOLDER COMPONENTS OR PAGES IN THIS FILE
 // AVOID REMOVING ANY CONTEXT PROVIDERS FROM THIS FILE (e.g. TooltipProvider, Toaster, Sonner)
@@ -16,11 +21,52 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <AdminRoutes />
       <Routes>
+        {/* Admin: shell próprio, rotas antes do catch-all */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route
+          path="/admin"
+          element={
+            <RequireAdmin>
+              <AdminLayout>
+                <EmpreendimentoList />
+              </AdminLayout>
+            </RequireAdmin>
+          }
+        />
+        <Route
+          path="/admin/novo"
+          element={
+            <RequireAdmin>
+              <AdminLayout>
+                <EmpreendimentoForm />
+              </AdminLayout>
+            </RequireAdmin>
+          }
+        />
+        <Route
+          path="/admin/editar/:id"
+          element={
+            <RequireAdmin>
+              <AdminLayout>
+                <EmpreendimentoForm />
+              </AdminLayout>
+            </RequireAdmin>
+          }
+        />
+        <Route
+          path="/admin/leads"
+          element={
+            <RequireAdmin>
+              <AdminLayout>
+                <LeadsView />
+              </AdminLayout>
+            </RequireAdmin>
+          }
+        />
+
         <Route element={<Layout />}>
           <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES MUST BE ADDED HERE */}
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
