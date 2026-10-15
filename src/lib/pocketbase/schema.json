@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-15T20:05:30.631Z",
+  "generatedAt": "2026-10-15T21:16:28.134Z",
   "collections": [
     {
       "name": "users",
@@ -8,7 +8,7 @@
         "list": "id = @request.auth.id",
         "view": "id = @request.auth.id",
         "create": null,
-        "update": "id = @request.auth.id",
+        "update": "id = @request.auth.id && @request.body.papel:changed = false",
         "delete": null
       },
       "fields": [
@@ -29,19 +29,602 @@
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate"]
+          "autodateTriggers": [
+            "onCreate"
+          ]
         },
         {
           "name": "updated",
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate", "onUpdate"]
+          "autodateTriggers": [
+            "onCreate",
+            "onUpdate"
+          ]
+        },
+        {
+          "name": "papel",
+          "type": "select",
+          "required": true,
+          "system": false,
+          "selectValues": [
+            "admin"
+          ]
         }
       ],
       "indexes": [
         "CREATE UNIQUE INDEX `idx_tokenKey__pb_users_auth_` ON `users` (`tokenKey`)",
         "CREATE UNIQUE INDEX `idx_email__pb_users_auth_` ON `users` (`email`) WHERE `email` != ''"
+      ]
+    },
+    {
+      "name": "sp3d_empreendimentos",
+      "type": "base",
+      "apiRules": {
+        "list": "publicado = true || (@request.auth.id != '' && @request.auth.papel = 'admin')",
+        "view": "publicado = true || (@request.auth.id != '' && @request.auth.papel = 'admin')",
+        "create": "@request.auth.id != '' && @request.auth.papel = 'admin'",
+        "update": "@request.auth.id != '' && @request.auth.papel = 'admin'",
+        "delete": "@request.auth.id != '' && @request.auth.papel = 'admin'"
+      },
+      "fields": [
+        {
+          "name": "slug",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "nome",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "status",
+          "type": "select",
+          "required": true,
+          "system": false,
+          "selectValues": [
+            "lancamento",
+            "obras",
+            "futuro",
+            "entregue"
+          ]
+        },
+        {
+          "name": "ano_entrega",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "endereco",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "bairro",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "lat",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "lng",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "area_min",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "area_max",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "dorms",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "suites",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "fotos",
+          "type": "file",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "capa",
+          "type": "file",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "modelo_glb",
+          "type": "file",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "altura_m",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "rotacao_graus",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "cor_destaque",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "ordem",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "publicado",
+          "type": "bool",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": [
+            "onCreate"
+          ]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": [
+            "onCreate",
+            "onUpdate"
+          ]
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX idx_sp3d_emp_slug ON sp3d_empreendimentos (slug)"
+      ]
+    },
+    {
+      "name": "sp3d_pois",
+      "type": "base",
+      "apiRules": {
+        "list": "",
+        "view": "",
+        "create": "@request.auth.id != '' && @request.auth.papel = 'admin'",
+        "update": "@request.auth.id != '' && @request.auth.papel = 'admin'",
+        "delete": "@request.auth.id != '' && @request.auth.papel = 'admin'"
+      },
+      "fields": [
+        {
+          "name": "nome",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "tipo",
+          "type": "select",
+          "required": true,
+          "system": false,
+          "selectValues": [
+            "metro",
+            "trem",
+            "hospital",
+            "parque",
+            "escola",
+            "shopping"
+          ]
+        },
+        {
+          "name": "lat",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "lng",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "linha",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": [
+            "onCreate"
+          ]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": [
+            "onCreate",
+            "onUpdate"
+          ]
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "name": "sp3d_distancias",
+      "type": "base",
+      "apiRules": {
+        "list": "empreendimento.publicado = true || (@request.auth.id != '' && @request.auth.papel = 'admin')",
+        "view": "empreendimento.publicado = true || (@request.auth.id != '' && @request.auth.papel = 'admin')",
+        "create": null,
+        "update": null,
+        "delete": null
+      },
+      "fields": [
+        {
+          "name": "empreendimento",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "sp3d_empreendimentos"
+        },
+        {
+          "name": "poi",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "sp3d_pois"
+        },
+        {
+          "name": "metros",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "minutos_a_pe",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "rota_validada",
+          "type": "bool",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "metodo",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": [
+            "onCreate"
+          ]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": [
+            "onCreate",
+            "onUpdate"
+          ]
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX idx_sp3d_dist_par ON sp3d_distancias (empreendimento, poi)"
+      ]
+    },
+    {
+      "name": "sp3d_marcos",
+      "type": "base",
+      "apiRules": {
+        "list": "",
+        "view": "",
+        "create": "@request.auth.id != '' && @request.auth.papel = 'admin'",
+        "update": "@request.auth.id != '' && @request.auth.papel = 'admin'",
+        "delete": "@request.auth.id != '' && @request.auth.papel = 'admin'"
+      },
+      "fields": [
+        {
+          "name": "nome",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "lat",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "lng",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "modelo_glb",
+          "type": "file",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "mostrar_rotulo",
+          "type": "bool",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": [
+            "onCreate"
+          ]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": [
+            "onCreate",
+            "onUpdate"
+          ]
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "name": "sp3d_config",
+      "type": "base",
+      "apiRules": {
+        "list": "",
+        "view": "",
+        "create": "@request.auth.id != '' && @request.auth.papel = 'admin'",
+        "update": "@request.auth.id != '' && @request.auth.papel = 'admin'",
+        "delete": "@request.auth.id != '' && @request.auth.papel = 'admin'"
+      },
+      "fields": [
+        {
+          "name": "chave",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "dados",
+          "type": "json",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": [
+            "onCreate"
+          ]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": [
+            "onCreate",
+            "onUpdate"
+          ]
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX idx_sp3d_config_chave ON sp3d_config (chave)"
+      ]
+    },
+    {
+      "name": "sp3d_leads",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.id != '' && @request.auth.papel = 'admin'",
+        "view": "@request.auth.id != '' && @request.auth.papel = 'admin'",
+        "create": null,
+        "update": null,
+        "delete": "@request.auth.id != '' && @request.auth.papel = 'admin'"
+      },
+      "fields": [
+        {
+          "name": "nome",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "telefone",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "email",
+          "type": "email",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "mensagem",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "empreendimento",
+          "type": "relation",
+          "required": false,
+          "system": false,
+          "collectionRef": "sp3d_empreendimentos"
+        },
+        {
+          "name": "origem",
+          "type": "select",
+          "required": true,
+          "system": false,
+          "selectValues": [
+            "formulario",
+            "whatsapp"
+          ]
+        },
+        {
+          "name": "ip_hash",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": [
+            "onCreate"
+          ]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": [
+            "onCreate",
+            "onUpdate"
+          ]
+        }
+      ],
+      "indexes": [
+        "CREATE INDEX idx_sp3d_leads_emp ON sp3d_leads (empreendimento, created)"
+      ]
+    },
+    {
+      "name": "sp3d_eventos",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.id != '' && @request.auth.papel = 'admin'",
+        "view": "@request.auth.id != '' && @request.auth.papel = 'admin'",
+        "create": null,
+        "update": null,
+        "delete": null
+      },
+      "fields": [
+        {
+          "name": "tipo",
+          "type": "select",
+          "required": true,
+          "system": false,
+          "selectValues": [
+            "sessao",
+            "abriu_imovel",
+            "ver_calcada",
+            "lead"
+          ]
+        },
+        {
+          "name": "empreendimento",
+          "type": "relation",
+          "required": false,
+          "system": false,
+          "collectionRef": "sp3d_empreendimentos"
+        },
+        {
+          "name": "dispositivo",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "duracao_s",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "ip_hash",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": [
+            "onCreate"
+          ]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": [
+            "onCreate",
+            "onUpdate"
+          ]
+        }
+      ],
+      "indexes": [
+        "CREATE INDEX idx_sp3d_ev_tipo ON sp3d_eventos (tipo, created)"
       ]
     }
   ]
