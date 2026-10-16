@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-15T22:40:24.852Z",
+  "generatedAt": "2026-10-16T00:45:47.686Z",
   "collections": [
     {
       "name": "users",
@@ -29,21 +29,28 @@
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate"]
+          "autodateTriggers": [
+            "onCreate"
+          ]
         },
         {
           "name": "updated",
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate", "onUpdate"]
+          "autodateTriggers": [
+            "onCreate",
+            "onUpdate"
+          ]
         },
         {
           "name": "papel",
           "type": "select",
           "required": true,
           "system": false,
-          "selectValues": ["admin"]
+          "selectValues": [
+            "admin"
+          ]
         }
       ],
       "indexes": [
@@ -79,7 +86,12 @@
           "type": "select",
           "required": true,
           "system": false,
-          "selectValues": ["lancamento", "obras", "futuro", "entregue"]
+          "selectValues": [
+            "lancamento",
+            "obras",
+            "futuro",
+            "entregue"
+          ]
         },
         {
           "name": "ano_entrega",
@@ -188,17 +200,24 @@
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate"]
+          "autodateTriggers": [
+            "onCreate"
+          ]
         },
         {
           "name": "updated",
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate", "onUpdate"]
+          "autodateTriggers": [
+            "onCreate",
+            "onUpdate"
+          ]
         }
       ],
-      "indexes": ["CREATE UNIQUE INDEX idx_sp3d_emp_slug ON sp3d_empreendimentos (slug)"]
+      "indexes": [
+        "CREATE UNIQUE INDEX idx_sp3d_emp_slug ON sp3d_empreendimentos (slug)"
+      ]
     },
     {
       "name": "sp3d_pois",
@@ -222,7 +241,14 @@
           "type": "select",
           "required": true,
           "system": false,
-          "selectValues": ["metro", "trem", "hospital", "parque", "escola", "shopping"]
+          "selectValues": [
+            "metro",
+            "trem",
+            "hospital",
+            "parque",
+            "escola",
+            "shopping"
+          ]
         },
         {
           "name": "lat",
@@ -247,14 +273,19 @@
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate"]
+          "autodateTriggers": [
+            "onCreate"
+          ]
         },
         {
           "name": "updated",
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate", "onUpdate"]
+          "autodateTriggers": [
+            "onCreate",
+            "onUpdate"
+          ]
         }
       ],
       "indexes": []
@@ -313,17 +344,24 @@
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate"]
+          "autodateTriggers": [
+            "onCreate"
+          ]
         },
         {
           "name": "updated",
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate", "onUpdate"]
+          "autodateTriggers": [
+            "onCreate",
+            "onUpdate"
+          ]
         }
       ],
-      "indexes": ["CREATE UNIQUE INDEX idx_sp3d_dist_par ON sp3d_distancias (empreendimento, poi)"]
+      "indexes": [
+        "CREATE UNIQUE INDEX idx_sp3d_dist_par ON sp3d_distancias (empreendimento, poi)"
+      ]
     },
     {
       "name": "sp3d_marcos",
@@ -371,14 +409,19 @@
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate"]
+          "autodateTriggers": [
+            "onCreate"
+          ]
         },
         {
           "name": "updated",
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate", "onUpdate"]
+          "autodateTriggers": [
+            "onCreate",
+            "onUpdate"
+          ]
         }
       ],
       "indexes": []
@@ -411,17 +454,24 @@
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate"]
+          "autodateTriggers": [
+            "onCreate"
+          ]
         },
         {
           "name": "updated",
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate", "onUpdate"]
+          "autodateTriggers": [
+            "onCreate",
+            "onUpdate"
+          ]
         }
       ],
-      "indexes": ["CREATE UNIQUE INDEX idx_sp3d_config_chave ON sp3d_config (chave)"]
+      "indexes": [
+        "CREATE UNIQUE INDEX idx_sp3d_config_chave ON sp3d_config (chave)"
+      ]
     },
     {
       "name": "sp3d_leads",
@@ -470,7 +520,10 @@
           "type": "select",
           "required": true,
           "system": false,
-          "selectValues": ["formulario", "whatsapp"]
+          "selectValues": [
+            "formulario",
+            "whatsapp"
+          ]
         },
         {
           "name": "ip_hash",
@@ -483,17 +536,24 @@
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate"]
+          "autodateTriggers": [
+            "onCreate"
+          ]
         },
         {
           "name": "updated",
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate", "onUpdate"]
+          "autodateTriggers": [
+            "onCreate",
+            "onUpdate"
+          ]
         }
       ],
-      "indexes": ["CREATE INDEX idx_sp3d_leads_emp ON sp3d_leads (empreendimento, created)"]
+      "indexes": [
+        "CREATE INDEX idx_sp3d_leads_emp ON sp3d_leads (empreendimento, created)"
+      ]
     },
     {
       "name": "sp3d_eventos",
@@ -511,7 +571,12 @@
           "type": "select",
           "required": true,
           "system": false,
-          "selectValues": ["sessao", "abriu_imovel", "ver_calcada", "lead"]
+          "selectValues": [
+            "sessao",
+            "abriu_imovel",
+            "ver_calcada",
+            "lead"
+          ]
         },
         {
           "name": "empreendimento",
@@ -543,17 +608,24 @@
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate"]
+          "autodateTriggers": [
+            "onCreate"
+          ]
         },
         {
           "name": "updated",
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate", "onUpdate"]
+          "autodateTriggers": [
+            "onCreate",
+            "onUpdate"
+          ]
         }
       ],
-      "indexes": ["CREATE INDEX idx_sp3d_ev_tipo ON sp3d_eventos (tipo, created)"]
+      "indexes": [
+        "CREATE INDEX idx_sp3d_ev_tipo ON sp3d_eventos (tipo, created)"
+      ]
     }
   ]
 }
