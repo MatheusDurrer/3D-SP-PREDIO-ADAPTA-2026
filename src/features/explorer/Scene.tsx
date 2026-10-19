@@ -125,7 +125,7 @@ export default function SceneCanvas({
     const group = new THREE.Group()
     scene.add(group)
 
-    // ---- terreno: malha por células MDT medidas (ausência real fica buraco) ---
+    // ---- terreno: pontos MDT medidos, sem interpolação da amostra irregular ---
     const terrainPts = data.layers.terrain.points
     const tGeo = new THREE.BufferGeometry()
     const tPos: number[] = []
@@ -136,23 +136,7 @@ export default function SceneCanvas({
       tMin = Math.min(tMin, p[1])
       tMax = Math.max(tMax, p[1])
     }
-    const cell = data.layers.terrain.grid_m
-    const indexMap = new Map<string, number>()
-    terrainPts.forEach((p, i) => {
-      tPos.push(p[0], p[1], p[2])
-      indexMap.set(`${Math.round(p[0] / cell)}_${Math.round(p[2] / cell)}`, i)
-    })
-    const idx: number[] = []
-    for (let i = 0; i < terrainPts.length; i++) {
-      const p = terrainPts[i]
-      const gx = Math.round(p[0] / cell)
-      const gz = Math.round(p[2] / cell)
-      const right = indexMap.get(`${gx + 1}_${gz}`)
-      const down = indexMap.get(`${gx}_${gz + 1}`)
-      const diag = indexMap.get(`${gx + 1}_${gz + 1}`)
-      if (right != null && down != null) idx.push(i, right, down)
-      if (right != null && diag != null && down != null) idx.push(right, diag, down)
-    }
+    for (const p of terrainPts) tPos.push(p[0], p[1], p[2])
     for (const p of terrainPts) {
       const t = (p[1] - tMin) / Math.max(tMax - tMin, 1e-6)
       const c = heightColor(t, [0x14532d, 0x65a30d, 0xfde047])
@@ -160,16 +144,15 @@ export default function SceneCanvas({
     }
     tGeo.setAttribute('position', new THREE.Float32BufferAttribute(tPos, 3))
     tGeo.setAttribute('color', new THREE.Float32BufferAttribute(tCol, 3))
-    tGeo.setIndex(idx)
-    tGeo.computeVertexNormals()
-    const terrainMesh = new THREE.Mesh(
-      tGeo,
-      new THREE.MeshStandardMaterial({
-        vertexColors: true,
-        side: THREE.DoubleSide,
-        roughness: 0.95,
-      }),
-    )
+
+    // Render only measured positions, without interpolating missing terrain.
+    tGeo.setIndex(null)
+    const terrainMaterial = new THREE.PointsMaterial({
+      vertexColors: true,
+      size: pointSize,
+      sizeAttenuation: false,
+    })
+    const terrainMesh = new THREE.Points(tGeo, terrainMaterial)
     group.add(terrainMesh)
 
     // ---- pontos de telhado LiDAR class6 (cor por altura) ------------------
@@ -222,7 +205,7 @@ export default function SceneCanvas({
       opacity: 0.92,
       flatShading: true,
     })
-    // altura de terreno de fallback: mediana real das células MDT (não inventada)
+    // Mediana apenas para o início visual do marcador; nunca como base de prédio.
     const tSorted = terrainPts.map((p) => p[1]).sort((a, b) => a - b)
     const tMedian = tSorted[Math.floor(tSorted.length / 2)] ?? tMin
     const bGroup = new THREE.Group()
@@ -245,6 +228,10 @@ export default function SceneCanvas({
       bGroup.add(new THREE.Mesh(geo, bMat))
     }
     group.add(bGroup)
+    host.dataset.buildingCount = String(bGroup.children.length)
+    host.dataset.terrainCount = String(terrainPts.length)
+    host.dataset.roofCount = String(roofPts.length)
+    host.dataset.contourCount = String(cPts.length)
 
     // ---- highlight Adapta: outline pulsante + marcador ---------------------
     const adapta = data.layers.adapta_contour
@@ -327,6 +314,7 @@ export default function SceneCanvas({
       },
       setPointSize: (px) => {
         host.dataset.pointSize = String(px)
+        terrainMaterial.size = px
         roofMat.size = px
         contourMat.size = px * 1.7
       },

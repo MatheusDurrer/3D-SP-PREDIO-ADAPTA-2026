@@ -154,23 +154,24 @@ export default function ExplorerPage() {
                 </li>
                 <li>
                   <span className="sp3d-dot" style={{ background: '#3f4a5a' }} /> Prédios cadastrais
-                  (extrusão edificacao_v3)
+                  (extrusão edificacao_v3, somente com base medida; camada opcional)
                 </li>
                 <li>
                   <span
                     className="sp3d-dot"
                     style={{ background: 'linear-gradient(90deg,#14532d,#65a30d,#fde047)' }}
                   />{' '}
-                  Terreno MDT amostrado (cor = altura)
+                  Terreno MDT em pontos medidos (sem interpolação; cor = altura)
                 </li>
               </ul>
 
               {counts && (
                 <p className="sp3d-counts">
-                  Amostra renderizada: {counts.terrain_cells.toLocaleString('pt-BR')} células de
+                  Amostra disponível: {counts.terrain_cells.toLocaleString('pt-BR')} células de
                   terreno · {counts.roof_points.toLocaleString('pt-BR')} pontos de telhado ·{' '}
-                  {counts.buildings.toLocaleString('pt-BR')} prédios · contorno{' '}
-                  {counts.contour_roof_points.toLocaleString('pt-BR')} pts · gate: {gate}
+                  {phase.data.layers.buildings.features.filter((f) => f.base_z_m != null).length}{' '}
+                  prédios com base medida ({counts.buildings.toLocaleString('pt-BR')} disponíveis) ·
+                  contorno {counts.contour_roof_points.toLocaleString('pt-BR')} pts · gate: {gate}
                 </p>
               )}
 
