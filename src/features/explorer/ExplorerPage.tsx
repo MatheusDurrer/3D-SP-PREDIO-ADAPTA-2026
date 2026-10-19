@@ -7,7 +7,7 @@ import './explorer.css'
 const LAYER_LABELS: Record<LayerKey, string> = {
   terrain: 'Terreno MDT',
   roof: 'Telhados LiDAR',
-  buildings: 'Prédios cadastrais',
+  buildings: 'Cadastro antigo · não validado 2025',
   outline: 'Destaque Adapta',
 }
 
@@ -20,7 +20,7 @@ export default function ExplorerPage() {
   const [layers, setLayers] = useState<Record<LayerKey, boolean>>({
     terrain: true,
     roof: false, // comparação técnica opcional; não encobrir a torre sólida
-    buildings: true, // apoio cadastral: somente features com base medida (sem fallback)
+    buildings: false, // Cadastro histórico: manter opcional até validar o entorno 2025+.
     outline: true,
   })
   const [overview, setOverview] = useState(false)
@@ -100,6 +100,9 @@ export default function ExplorerPage() {
             </span>
           )}
           {densityLabel && <span className="sp3d-hud-density">{densityLabel}</span>}
+          <span className="sp3d-hud-density" data-testid="surroundings-status">
+            Entorno não validado 2025 · cadastro histórico opcional
+          </span>
           {phase.kind === 'ready' && (
             <span className="sp3d-hud-density" data-testid="tower-status">
               {phase.data.towerCandidate
@@ -231,7 +234,8 @@ export default function ExplorerPage() {
                   </li>
                   <li>
                     <span className="sp3d-dot" style={{ background: '#3f4a5a' }} /> Prédios
-                    cadastrais (extrusão edificacao_v3, somente com base medida; camada opcional)
+                    cadastrais históricos (edificacao_v3; NÃO validados em 2025, desligados por
+                    padrão)
                   </li>
                   <li>
                     <span

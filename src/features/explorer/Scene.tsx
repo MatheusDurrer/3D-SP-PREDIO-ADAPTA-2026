@@ -218,18 +218,28 @@ export default function SceneCanvas({
       for (let i = 1; i < ring.length; i++) shape.lineTo(ring[i][0], ring[i][1])
       const h = f.h_cadastral_m
       const geo = new THREE.ExtrudeGeometry(shape, { depth: h, bevelEnabled: false })
-      geo.rotateX(Math.PI / 2) // (x, y_shape, z_extr) -> (x, -z_extr, y_shape)
-      geo.translate(0, h, 0) // base em y=0 local
+      // Source ring is local East/North. Scene axes: x=East, y=height, z=-North.
+      // rotateX(-PI/2) maps (E,N,extrusion) to (E,extrusion,-N).
+      geo.rotateX(-Math.PI / 2)
       const base = f.base_z_m
       if (base == null) {
         geo.dispose()
         continue
       } // Nunca inventar suporte de terreno ausente.
       geo.translate(0, base, 0)
-      bGroup.add(new THREE.Mesh(geo, bMat))
+      const building = new THREE.Mesh(geo, bMat)
+      building.name = f.id
+      building.userData = {
+        source: 'edificacao_v3_historical',
+        id: f.id,
+        validation2025: 'NOT_VALIDATED',
+      }
+      bGroup.add(building)
     }
     group.add(bGroup)
     host.dataset.buildingCount = String(bGroup.children.length)
+    host.dataset.buildingAxes = 'E,height,-N'
+    host.dataset.surroundings2025 = 'NOT_VALIDATED'
     host.dataset.terrainCount = String(terrainPts.length)
     host.dataset.roofCount = String(roofPts.length)
     host.dataset.contourCount = String(cPts.length)
