@@ -362,7 +362,7 @@
   .sp3d-explorer .sp3d-panel {
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: 64px; /* reserva o badge da plataforma: não bloquear o toggle */
     max-width: none;
     border-radius: 16px 16px 0 0;
     border-bottom: none;
