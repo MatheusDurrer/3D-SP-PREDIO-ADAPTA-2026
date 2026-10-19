@@ -49,7 +49,7 @@ function makeMarkerTexture(): THREE.CanvasTexture {
   ctx.font = '600 26px system-ui, sans-serif'
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
-  ctx.fillText('ADAPTA · CANDIDATO NORTE', cv.width / 2, cv.height / 2 - 12)
+  ctx.fillText('ADAPTA · NORTE', cv.width / 2, cv.height / 2 - 12, cv.width - 24)
   ctx.fillStyle = '#cbd5e1'
   ctx.font = '500 18px system-ui, sans-serif'
   ctx.fillText('precisão não validada', cv.width / 2, cv.height / 2 + 13)

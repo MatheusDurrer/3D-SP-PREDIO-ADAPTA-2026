@@ -366,6 +366,8 @@
     max-width: none;
     border-radius: 16px 16px 0 0;
     border-bottom: none;
+    max-height: none;
+    overflow: visible;
     padding: 0;
     padding-bottom: env(safe-area-inset-bottom);
     transition: transform 0.45s cubic-bezier(0.32, 0.72, 0, 1);
