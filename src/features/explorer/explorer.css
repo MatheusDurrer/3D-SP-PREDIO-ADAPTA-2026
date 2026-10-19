@@ -1,0 +1,288 @@
+/* SP3D Explorer — CSS 100% escopado sob .sp3d-explorer (não afeta /, /adapta, /admin) */
+.sp3d-explorer {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  background: #0b0f14;
+  color: #e2e8f0;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+}
+.sp3d-explorer *,
+.sp3d-explorer *::before,
+.sp3d-explorer *::after {
+  box-sizing: border-box;
+}
+
+.sp3d-explorer .sp3d-hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #0d121a;
+  border-bottom: 1px solid #1f2937;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+.sp3d-explorer .sp3d-hdr > div:first-child {
+  min-width: 0;
+}
+.sp3d-explorer .sp3d-hdr h1 {
+  margin: 0;
+  font-size: 14px;
+  letter-spacing: 0.14em;
+}
+.sp3d-explorer .sp3d-hdr p {
+  margin: 2px 0 0;
+  font-size: 10.5px;
+  color: #f59e0b;
+  letter-spacing: 0.06em;
+}
+.sp3d-explorer .sp3d-hdr-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.sp3d-explorer .sp3d-badge {
+  border: 1px solid #f59e0b;
+  color: #fbbf24;
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+  letter-spacing: 0.08em;
+}
+
+.sp3d-explorer .sp3d-stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+.sp3d-explorer .canvas-host {
+  position: absolute;
+  inset: 0;
+}
+.sp3d-explorer .canvas-host canvas {
+  display: block;
+}
+
+.sp3d-explorer .sp3d-panel {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  max-width: 470px;
+  background: rgba(13, 18, 26, 0.93);
+  border: 1px solid #263241;
+  border-radius: 12px;
+  padding: 10px 12px;
+  backdrop-filter: blur(6px);
+  z-index: 5;
+}
+.sp3d-explorer .sp3d-btnrow {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.sp3d-explorer .sp3d-btn {
+  background: #16202e;
+  border: 1px solid #2b3a4d;
+  color: #e2e8f0;
+  padding: 8px 11px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  cursor: pointer;
+  min-height: 44px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.sp3d-explorer .sp3d-btn:hover {
+  border-color: #3f5470;
+}
+.sp3d-explorer .sp3d-btn-active {
+  border-color: #f59e0b;
+  color: #fbbf24;
+}
+.sp3d-explorer .sp3d-btn-primary {
+  background: #f59e0b;
+  border-color: #f59e0b;
+  color: #0b0f14;
+  font-weight: 600;
+}
+.sp3d-explorer .sp3d-btn-primary:hover {
+  background: #fbbf24;
+}
+.sp3d-explorer .sp3d-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sp3d-explorer .sp3d-slider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 9px;
+  font-size: 12px;
+  color: #94a3b8;
+}
+.sp3d-explorer .sp3d-slider input {
+  flex: 1;
+  accent-color: #f59e0b;
+}
+.sp3d-explorer .sp3d-val {
+  min-width: 34px;
+  text-align: right;
+  color: #e2e8f0;
+  font-variant-numeric: tabular-nums;
+}
+
+.sp3d-explorer .sp3d-legend {
+  list-style: none;
+  margin: 9px 0 0;
+  padding: 0;
+  font-size: 11.5px;
+  color: #cbd5e1;
+  display: grid;
+  gap: 3px;
+}
+.sp3d-explorer .sp3d-legend li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.sp3d-explorer .sp3d-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: inline-block;
+}
+.sp3d-explorer .sp3d-dot-roof {
+  background: linear-gradient(90deg, #1d4ed8, #22d3ee, #fde047);
+}
+
+.sp3d-explorer .sp3d-counts {
+  margin: 8px 0 0;
+  font-size: 10.5px;
+  color: #7c8b9d;
+}
+
+.sp3d-explorer .sp3d-limits {
+  margin-top: 8px;
+  font-size: 11px;
+  color: #94a3b8;
+}
+.sp3d-explorer .sp3d-limits summary {
+  cursor: pointer;
+  color: #cbd5e1;
+}
+.sp3d-explorer .sp3d-limits ul {
+  margin: 6px 0;
+  padding-left: 16px;
+  display: grid;
+  gap: 3px;
+}
+.sp3d-explorer .sp3d-prov {
+  color: #64748b;
+  font-size: 10px;
+  margin: 4px 0 0;
+}
+
+.sp3d-explorer .sp3d-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(5, 8, 12, 0.78);
+  z-index: 20;
+  text-align: center;
+  padding: 16px;
+}
+.sp3d-explorer .sp3d-spinner {
+  width: 34px;
+  height: 34px;
+  border: 3px solid #2b3a4d;
+  border-top-color: #f59e0b;
+  border-radius: 50%;
+  margin: 0 auto 10px;
+  animation: sp3d-spin 0.9s linear infinite;
+}
+@keyframes sp3d-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.sp3d-explorer .sp3d-errbox {
+  max-width: 380px;
+  background: #0d121a;
+  border: 1px solid #263241;
+  border-radius: 12px;
+  padding: 18px;
+  text-align: left;
+}
+.sp3d-explorer .sp3d-errbox h2 {
+  margin: 0 0 6px;
+  font-size: 16px;
+}
+.sp3d-explorer .sp3d-errdetail {
+  color: #f87171;
+  font-size: 12px;
+  word-break: break-word;
+}
+.sp3d-explorer .sp3d-errhint {
+  color: #64748b;
+  font-size: 11px;
+}
+.sp3d-explorer .sp3d-errbox .sp3d-btn {
+  margin-top: 10px;
+}
+
+@media (max-width: 480px) {
+  .sp3d-explorer .sp3d-hdr {
+    padding: 7px 10px;
+  }
+  .sp3d-explorer .sp3d-hdr h1 {
+    font-size: 12px;
+  }
+  .sp3d-explorer .sp3d-hdr p {
+    font-size: 9.5px;
+  }
+  .sp3d-explorer .sp3d-hdr-actions {
+    gap: 6px;
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .sp3d-explorer .sp3d-badge {
+    display: none;
+  }
+  .sp3d-explorer .sp3d-btn {
+    padding: 9px 10px;
+    font-size: 12px;
+  }
+  .sp3d-explorer .sp3d-panel {
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    max-width: none;
+    padding: 9px 10px;
+    max-height: 42dvh;
+    overflow-y: auto;
+  }
+  .sp3d-explorer .sp3d-legend {
+    font-size: 11px;
+  }
+  .sp3d-explorer .sp3d-counts {
+    font-size: 10px;
+  }
+}

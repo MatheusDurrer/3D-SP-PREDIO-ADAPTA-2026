@@ -1,4 +1,5 @@
 /* Main App Component - Handles routing (using react-router-dom), query client and other providers */
+import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Toaster } from '@/components/ui/toaster'
 import { Toaster as Sonner } from '@/components/ui/sonner'
@@ -16,6 +17,9 @@ import LeadsView from './pages/admin/LeadsView'
 
 // ONLY IMPORT AND RENDER WORKING PAGES, NEVER ADD PLACEHOLDER COMPONENTS OR PAGES IN THIS FILE
 // AVOID REMOVING ANY CONTEXT PROVIDERS FROM THIS FILE (e.g. TooltipProvider, Toaster, Sonner)
+
+// SP3D Explorer 3D: módulo isolado com lazy load (chunk separado, não afeta as rotas existentes)
+const LazyExplorerPage = lazy(() => import('./features/explorer/ExplorerPage'))
 
 const App = () => (
   <BrowserRouter>
@@ -67,6 +71,14 @@ const App = () => (
         />
 
         <Route path="/adapta" element={<AdaptaArrival />} />
+        <Route
+          path="/explorar"
+          element={
+            <Suspense fallback={<div style={{ minHeight: '100dvh' }} />}>
+              <LazyExplorerPage />
+            </Suspense>
+          }
+        />
         <Route element={<Layout />}>
           <Route path="/" element={<Index />} />
         </Route>
