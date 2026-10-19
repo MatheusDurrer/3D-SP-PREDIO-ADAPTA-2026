@@ -286,3 +286,133 @@
     font-size: 10px;
   }
 }
+
+/* ---- HUD mínimo (sempre visível; aviso de precisão nunca escondido) ---- */
+.sp3d-explorer .sp3d-hud {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  z-index: 4;
+  pointer-events: none; /* gestos do canvas passam através */
+  max-width: calc(100% - 20px);
+}
+.sp3d-explorer .sp3d-hud > span {
+  pointer-events: auto;
+  border-radius: 999px;
+  padding: 4px 9px;
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.sp3d-explorer .sp3d-hud-precision {
+  background: rgba(245, 158, 11, 0.14);
+  border: 1px solid rgba(245, 158, 11, 0.55);
+  color: #fbbf24;
+  font-weight: 600;
+}
+.sp3d-explorer .sp3d-hud-counts,
+.sp3d-explorer .sp3d-hud-density {
+  background: rgba(13, 18, 26, 0.82);
+  border: 1px solid #263241;
+  color: #cbd5e1;
+  font-variant-numeric: tabular-nums;
+}
+.sp3d-explorer .sp3d-hud-density {
+  color: #94a3b8;
+}
+
+/* ---- Painel colapsável (desktop: cartão compacto; mobile: drawer) ------ */
+.sp3d-explorer .sp3d-panel {
+  padding: 4px 8px 8px;
+}
+.sp3d-explorer .sp3d-panel-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  background: transparent;
+  border: none;
+  color: #e2e8f0;
+  font-size: 12.5px;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  padding: 0 4px;
+}
+.sp3d-explorer .sp3d-panel-toggle:focus-visible {
+  outline: 2px solid #f59e0b;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+.sp3d-explorer .sp3d-panel-chevron {
+  color: #f59e0b;
+  font-size: 13px;
+}
+.sp3d-explorer .sp3d-panel-closed .sp3d-panel-body {
+  display: none; /* desktop: colapso compacto */
+}
+
+@media (max-width: 768px) {
+  /* Drawer inferior: transform puro, scroll interno, safe-area, alvo >= 44px */
+  .sp3d-explorer .sp3d-panel {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-width: none;
+    border-radius: 16px 16px 0 0;
+    border-bottom: none;
+    padding: 0;
+    padding-bottom: env(safe-area-inset-bottom);
+    transition: transform 0.45s cubic-bezier(0.32, 0.72, 0, 1);
+    will-change: transform;
+  }
+  .sp3d-explorer .sp3d-panel::before {
+    /* affordance de drawer: barra de arraste */
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 36px;
+    height: 3px;
+    border-radius: 999px;
+    background: #3f4a5a;
+  }
+  .sp3d-explorer .sp3d-panel-toggle {
+    min-height: 48px;
+    padding: 0 16px;
+    font-size: 13px;
+  }
+  .sp3d-explorer .sp3d-panel-body {
+    max-height: 45dvh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding: 2px 12px calc(12px + env(safe-area-inset-bottom));
+    border-top: 1px solid #1f2937;
+  }
+  .sp3d-explorer .sp3d-panel-closed {
+    transform: translateY(calc(100% - 48px));
+  }
+  .sp3d-explorer .sp3d-panel-closed .sp3d-panel-body {
+    display: block; /* mantém fluxo; recuo é por transform */
+    pointer-events: none;
+  }
+  .sp3d-explorer .sp3d-btnrow {
+    gap: 6px;
+  }
+  .sp3d-explorer .sp3d-btn {
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sp3d-explorer .sp3d-panel {
+    transition: none;
+  }
+}

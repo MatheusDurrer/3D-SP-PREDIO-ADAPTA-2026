@@ -34,25 +34,25 @@ function heightColor(t: number, stops: [number, number, number]): THREE.Color {
 
 function makeMarkerTexture(): THREE.CanvasTexture {
   const cv = document.createElement('canvas')
-  cv.width = 512
-  cv.height = 128
+  cv.width = 320
+  cv.height = 84
   const ctx = cv.getContext('2d')!
   ctx.fillStyle = 'rgba(13,18,26,0.88)'
   ctx.strokeStyle = '#f59e0b'
-  ctx.lineWidth = 4
-  const r = 18
+  ctx.lineWidth = 3
+  const r = 14
   ctx.beginPath()
-  ctx.roundRect(4, 4, cv.width - 8, cv.height - 8, r)
+  ctx.roundRect(3, 3, cv.width - 6, cv.height - 6, r)
   ctx.fill()
   ctx.stroke()
   ctx.fillStyle = '#fbbf24'
-  ctx.font = '600 30px system-ui, sans-serif'
+  ctx.font = '600 26px system-ui, sans-serif'
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
-  ctx.fillText('ADAPTA · CANDIDATO NORTE', cv.width / 2, cv.height / 2 - 16)
-  ctx.fillStyle = '#94a3b8'
-  ctx.font = '500 22px system-ui, sans-serif'
-  ctx.fillText('NÃO VALIDADO — gate NOT_VALIDATED', cv.width / 2, cv.height / 2 + 22)
+  ctx.fillText('ADAPTA · CANDIDATO NORTE', cv.width / 2, cv.height / 2 - 12)
+  ctx.fillStyle = '#cbd5e1'
+  ctx.font = '500 18px system-ui, sans-serif'
+  ctx.fillText('precisão não validada', cv.width / 2, cv.height / 2 + 13)
   const tex = new THREE.CanvasTexture(cv)
   tex.colorSpace = THREE.SRGBColorSpace
   return tex
@@ -258,9 +258,12 @@ export default function SceneCanvas({
       depthTest: false,
     })
     const marker = new THREE.Sprite(markerMat)
-    marker.scale.set(46, 11.5, 1)
-    marker.position.set(0, contourMedian + 16, 0)
+    marker.scale.set(30, 7.9, 1) // reduzido: legível de perto, sem dominar a vista
+    marker.position.set(0, contourMedian + 14, 0)
     group.add(marker)
+    host.dataset.focusMode = 'adapta'
+    host.dataset.fitRadiusM = ''
+    host.dataset.fitTarget = ''
 
     const pinGeo = new THREE.BufferGeometry()
     pinGeo.setAttribute(
@@ -273,14 +276,20 @@ export default function SceneCanvas({
     )
     group.add(pin)
 
-    // ---- fit de viewport ---------------------------------------------------
+    // ---- fit de viewport (aspect-aware) ------------------------------------
     const fitView = (topDown = false) => {
       const box = new THREE.Box3().setFromObject(group)
       const center = box.getCenter(new THREE.Vector3())
       const size = box.getSize(new THREE.Vector3())
       const radius = Math.max(size.length() * 0.5, 50)
       const fov = (camera.fov * Math.PI) / 180
-      const dist = (radius / Math.sin(fov / 2)) * 0.92
+      // Aspect-aware: o menor dos FOVs (vertical vs horizontal) rege a distância —
+      // em retrato (aspect < 1) o FOV horizontal é mais estreito e o fit antigo exagerava.
+      const aspect = Math.max(camera.aspect, 0.01)
+      const hFov = 2 * Math.atan(Math.tan(fov / 2) * aspect)
+      const minFov = Math.min(fov, hFov)
+      const dist = (radius / Math.sin(minFov / 2)) * 0.92
+      if (dist > controls.maxDistance) controls.maxDistance = dist * 1.05
       camera.near = Math.max(dist / 200, 0.1)
       camera.far = dist * 12
       camera.updateProjectionMatrix()
@@ -292,8 +301,53 @@ export default function SceneCanvas({
       }
       controls.target.copy(center)
       controls.update()
+      host.dataset.viewMode = topDown ? 'overview-topdown' : 'overview-orbit'
     }
-    fitView(false)
+
+    // ---- foco Adapta: esfera medida do contorno (sem fingir altura) --------
+    const fitAdaptaFocus = (topDown = false) => {
+      const adapta = data.layers.adapta_contour
+      const ring = adapta.rings[0] ?? []
+      if (!ring.length) {
+        fitView(topDown)
+        return
+      }
+      const box = new THREE.Box3().setFromObject(group)
+      const sceneSize = box.getSize(new THREE.Vector3())
+      const sceneRadius = Math.max(sceneSize.length() * 0.5, 50)
+
+      const cPts = data.layers.contour_roof_points.points
+      const contourMedian = cPts.length
+        ? cPts.map((p) => p[1]).sort((a, b) => a - b)[Math.floor(cPts.length / 2)]
+        : 0
+      const center = new THREE.Vector3(0, contourMedian, 0)
+      const radius = Math.max(
+        Math.hypot(ring[0][0], ring[0][1]),
+        ...ring.slice(1).map((pt) => Math.hypot(pt[0], pt[1])),
+        25,
+      )
+      const fov = (camera.fov * Math.PI) / 180
+      const aspect = Math.max(camera.aspect, 0.01)
+      const hFov = 2 * Math.atan(Math.tan(fov / 2) * aspect)
+      const minFov = Math.min(fov, hFov) // o FOV mais estreito rege a distância
+      const dist = (radius / Math.sin(minFov / 2)) * 1.15
+      if (dist > controls.maxDistance) controls.maxDistance = dist * 1.05
+      camera.near = Math.max(dist / 200, 0.2)
+      camera.far = Math.max(dist * 12, sceneRadius * 3)
+      camera.updateProjectionMatrix()
+      if (topDown) {
+        camera.position.set(0.02, contourMedian + dist, 0.02)
+      } else {
+        const dirV = new THREE.Vector3(0.62, 0.42, 0.78).normalize()
+        camera.position.copy(center).add(dirV.multiplyScalar(dist))
+      }
+      controls.target.copy(center)
+      controls.update()
+      host.dataset.fitRadiusM = radius.toFixed(1)
+      host.dataset.fitTarget = `0,${contourMedian.toFixed(1)},0`
+      host.dataset.viewMode = topDown ? 'focus-topdown' : 'focus-orbit'
+    }
+    fitAdaptaFocus(false)
 
     // ---- API imperativa ----------------------------------------------------
     let autoRotateOn = autoRotate && !reducedMotion
@@ -318,8 +372,8 @@ export default function SceneCanvas({
         roofMat.size = px
         contourMat.size = px * 1.7
       },
-      resetView: () => fitView(false),
-      setOverview: (on) => fitView(on),
+      resetView: () => fitAdaptaFocus(false),
+      setOverview: (on) => (on ? fitView(true) : fitAdaptaFocus(false)),
     }
     apiRef.current = api
 
@@ -335,6 +389,7 @@ export default function SceneCanvas({
 
     // ---- loop ----------------------------------------------------------------
     let raf = 0
+    let frame = 0
     controls.autoRotate = autoRotateOn
     controls.autoRotateSpeed = 0.6
     const clock = new THREE.Clock()
@@ -350,10 +405,14 @@ export default function SceneCanvas({
       }
       renderer.render(scene, camera)
       host.dataset.rendered = 'true'
-      host.dataset.camera = camera.position
-        .toArray()
-        .map((v) => v.toFixed(2))
-        .join(',')
+      // Telemetria throttled (~5 Hz): evita construir string de dataset a cada frame.
+      if (frame % 12 === 0) {
+        host.dataset.camera = camera.position
+          .toArray()
+          .map((v) => v.toFixed(2))
+          .join(',')
+      }
+      frame++
     }
     animate()
 

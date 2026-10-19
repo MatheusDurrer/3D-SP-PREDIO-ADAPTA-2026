@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { SceneData } from './types'
+import { readDense } from './density'
 
 type Phase =
   | { kind: 'loading' }
@@ -65,11 +66,57 @@ export function useSceneData(): {
         if (!r.ok) throw new Error(`HTTP ${r.status}`)
         return r.json() as Promise<unknown>
       })
-      .then((raw) => {
+      .then(async (raw) => {
         if (!alive) return
         const err = validate(raw)
         if (err) throw new Error(`scene data inválido: ${err}`)
-        setPhase({ kind: 'ready', data: raw as SceneData })
+        const data = raw as SceneData
+        const detailCtrl = new AbortController()
+        const abortDetail = () => detailCtrl.abort()
+        ctrl.signal.addEventListener('abort', abortDetail, { once: true })
+        const detailTimer = setTimeout(abortDetail, 7000)
+        try {
+          const response = await fetch('/scene/adapta-dense-v2.bin', {
+            cache: 'no-store',
+            signal: detailCtrl.signal,
+          })
+          if (!response.ok) throw new Error(`HTTP ${response.status}`)
+          const points = await readDense(await response.arrayBuffer())
+          if (!alive) return
+          data.layers.terrain.points = points[0]
+          data.layers.roof_points.points = points[1]
+          data.layers.contour_roof_points.points = points[2]
+          data.counts = {
+            ...data.counts,
+            terrain_cells: points[0].length,
+            roof_points: points[1].length,
+            contour_roof_points: points[2].length,
+          }
+          if (data.sampled) {
+            data.sampled.stride = { terrain: 6, roof_points: 6, contour_roof_points: 1 }
+            data.sampled.method =
+              'Detalhe ampliado: subamostra exata por stride 6/6/1; codec sem perda em centímetros; nenhuma interpolação'
+            data.sampled.effective_grid_m = {}
+          }
+          data.limits = [
+            ...data.limits,
+            'DETALHE AMPLIADO: 7.508 posições originais verificadas por SHA-256; decimação por stride não define uma grade regular. Terreno é exibido como pontos medidos, sem interpolação.',
+          ]
+        } catch (error) {
+          if (!alive) return
+          const reason = error instanceof Error ? error.message : String(error)
+          data.limits = [
+            ...data.limits,
+            `Detalhe ampliado indisponível (${reason}). Exibindo amostra leve original de 1.681 posições; nenhuma posição foi inventada.`,
+          ]
+          if (data.sampled)
+            data.sampled.method =
+              'Modo leve: detalhe ampliado indisponível; subamostra original de 1.681 posições'
+        } finally {
+          clearTimeout(detailTimer)
+          ctrl.signal.removeEventListener('abort', abortDetail)
+        }
+        if (alive) setPhase({ kind: 'ready', data })
       })
       .catch((e: unknown) => {
         if (!alive) return
