@@ -51,6 +51,13 @@ export default function AdaptaArrival() {
             Consulte o endereço e abra o trajeto no seu aplicativo de mapas.
           </p>
         </header>
+        <Link to="/explorar" className={button}>
+          Explorar entorno em 3D · preview técnico
+        </Link>
+        <p className="text-xs text-slate-400">
+          Amostra de dados reais, sem validação externa de precisão. Não substitui as orientações de
+          chegada.
+        </p>
         {error ? (
           <section role="alert" className="space-y-4 rounded-xl border border-red-900 p-5">
             <p>{error}</p>

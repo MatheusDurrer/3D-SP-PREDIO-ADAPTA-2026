@@ -109,6 +109,7 @@ export default function ExplorerPage() {
                     key={k}
                     className={`sp3d-btn ${layers[k] ? 'sp3d-btn-active' : ''}`}
                     onClick={() => toggleLayer(k)}
+                    aria-pressed={layers[k]}
                   >
                     {LAYER_LABELS[k]}
                   </button>
@@ -116,6 +117,7 @@ export default function ExplorerPage() {
                 <button
                   className={`sp3d-btn ${overview ? 'sp3d-btn-active' : ''}`}
                   onClick={() => setOverview((v) => !v)}
+                  aria-pressed={overview}
                 >
                   Vista geral
                 </button>
@@ -126,7 +128,13 @@ export default function ExplorerPage() {
                 >
                   {autoRotate ? 'Pausar movimento' : 'Retomar movimento'}
                 </button>
-                <button className="sp3d-btn" onClick={() => apiReset()}>
+                <button
+                  className="sp3d-btn"
+                  onClick={() => {
+                    setOverview(false)
+                    apiReset()
+                  }}
+                >
                   Reset câmera
                 </button>
               </div>

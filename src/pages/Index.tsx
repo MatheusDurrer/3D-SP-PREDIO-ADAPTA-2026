@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 const Index = () => (
   <main className="min-h-screen bg-slate-950 text-slate-200 px-6 py-16 flex items-center justify-center">
     <section className="max-w-xl space-y-6" aria-labelledby="project-title">
@@ -8,10 +10,24 @@ const Index = () => (
         Uma cidade real começa com dados reais.
       </h1>
       <p className="text-slate-400 leading-relaxed">
-        Este projeto está na fase de validação das fontes e do piloto geoespacial. A réplica 3D
-        ainda não está disponível. Contornos, relevo e alturas precisam passar pelos critérios de
-        fidelidade antes da experiência visual.
+        O explorador técnico do entorno da Adapta já está disponível em preview, com uma amostra dos
+        dados LiDAR e terreno medidos. A precisão externa não foi validada; esta visualização não
+        representa a cidade inteira nem uma réplica visual concluída.
       </p>
+      <nav aria-label="Explorar o projeto" className="flex flex-wrap gap-3">
+        <Link
+          to="/explorar"
+          className="inline-flex min-h-12 items-center rounded-xl bg-amber-300 px-5 py-3 font-medium text-slate-950"
+        >
+          Abrir explorador 3D
+        </Link>
+        <Link
+          to="/adapta"
+          className="inline-flex min-h-12 items-center rounded-xl border border-slate-600 px-5 py-3"
+        >
+          Como chegar à Adapta
+        </Link>
+      </nav>
       <aside className="border border-slate-700 rounded-xl p-5 text-sm leading-relaxed">
         <h2 className="text-slate-100 font-medium mb-2">Piloto do eixo sudoeste</h2>
         <p>
