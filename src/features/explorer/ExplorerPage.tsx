@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import SceneCanvas, { type LayerKey } from './Scene'
 import { usePrefersReducedMotion, useSceneData, useWebglLostAlert } from './hooks'
+import './explorer.css'
 
 const LAYER_LABELS: Record<LayerKey, string> = {
   terrain: 'Terreno MDT',
