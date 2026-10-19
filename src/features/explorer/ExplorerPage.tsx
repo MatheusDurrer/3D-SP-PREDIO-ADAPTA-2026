@@ -19,7 +19,7 @@ export default function ExplorerPage() {
   const [pointSize, setPointSize] = useState(2.2)
   const [layers, setLayers] = useState<Record<LayerKey, boolean>>({
     terrain: true,
-    roof: true,
+    roof: false, // comparação técnica opcional; não encobrir a torre sólida
     buildings: true, // apoio cadastral: somente features com base medida (sem fallback)
     outline: true,
   })

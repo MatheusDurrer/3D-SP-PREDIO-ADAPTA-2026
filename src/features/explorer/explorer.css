@@ -66,6 +66,7 @@
   position: relative;
   flex: 1;
   min-height: 0;
+  overflow: hidden;
 }
 .sp3d-explorer .canvas-host {
   position: absolute;
