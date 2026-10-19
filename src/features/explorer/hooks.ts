@@ -71,6 +71,37 @@ export function useSceneData(): {
         const err = validate(raw)
         if (err) throw new Error(`scene data inválido: ${err}`)
         const data = raw as SceneData
+        const towerCtrl = new AbortController()
+        const towerTimer = setTimeout(() => towerCtrl.abort(), 5000)
+        try {
+          const towerResponse = await fetch('/scene/tower-candidate-v1.json', {
+            cache: 'no-store',
+            signal: towerCtrl.signal,
+          })
+          if (!towerResponse.ok) throw new Error(`HTTP ${towerResponse.status}`)
+          const candidate = await towerResponse.json()
+          if (
+            candidate.schema !== 'sp3d_tower_candidate/1' ||
+            candidate.source_glb_sha256 !==
+              'b3568fe45eb3ff87ab5fc05b08b2d4183ba33cd58989f8a616638e2d33a78dba' ||
+            !Array.isArray(candidate.profiles) ||
+            candidate.profiles.length !== 3
+          )
+            throw new Error('Modelo candidato inválido')
+          data.towerCandidate = candidate
+          data.limits = [
+            ...data.limits,
+            'TORRE SÓLIDA CANDIDATA: corpo extrudado do contorno de telhado; volumes médio/podium inferidos de LiDAR. Juntas procedurais; fachada, curvatura e recuos não aprovados. Solo texturizado ainda não integrado.',
+          ]
+        } catch {
+          data.limits = [
+            ...data.limits,
+            'Modelo sólido candidato indisponível; exibindo apenas dados técnicos.',
+          ]
+        } finally {
+          clearTimeout(towerTimer)
+        }
+        if (!alive) return
         const detailCtrl = new AbortController()
         const abortDetail = () => detailCtrl.abort()
         ctrl.signal.addEventListener('abort', abortDetail, { once: true })

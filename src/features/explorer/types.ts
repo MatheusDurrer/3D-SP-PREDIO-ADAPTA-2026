@@ -38,6 +38,7 @@ export interface SampledMeta {
 }
 
 export interface SceneData {
+  towerCandidate?: import('./tower').TowerCandidate
   schema: string
   status: string
   gate: string

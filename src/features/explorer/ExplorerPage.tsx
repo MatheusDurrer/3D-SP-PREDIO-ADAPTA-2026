@@ -72,7 +72,7 @@ export default function ExplorerPage() {
     <div className="sp3d-explorer">
       <header className="sp3d-hdr">
         <div>
-          <h1>SP3D · EXPLORADOR 3D — NUVEM LiDAR 2020</h1>
+          <h1>SP3D · ADAPTA — MODELO VOLUMÉTRICO CANDIDATO</h1>
           <p>
             PRECISÃO EXTERNA NÃO VALIDADA · gate NOT_VALIDATED · amostra decimada do dataset real
           </p>
@@ -100,6 +100,13 @@ export default function ExplorerPage() {
             </span>
           )}
           {densityLabel && <span className="sp3d-hud-density">{densityLabel}</span>}
+          {phase.kind === 'ready' && (
+            <span className="sp3d-hud-density" data-testid="tower-status">
+              {phase.data.towerCandidate
+                ? 'Torre sólida candidata · solo ainda em pontos'
+                : 'Torre candidata indisponível · modo técnico'}
+            </span>
+          )}
         </div>
 
         {phase.kind === 'loading' && (
@@ -220,7 +227,7 @@ export default function ExplorerPage() {
                   </li>
                   <li>
                     <span className="sp3d-dot" style={{ background: '#fbbf24' }} /> Contorno
-                    candidato NORTE (Adapta)
+                    candidato NORTE + torre sólida inferida (Adapta; fachada não aprovada)
                   </li>
                   <li>
                     <span className="sp3d-dot" style={{ background: '#3f4a5a' }} /> Prédios

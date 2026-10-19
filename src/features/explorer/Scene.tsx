@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import type { BuildingFeature, SceneData } from './types'
+import { makeTowerCandidate } from './tower'
 
 export type LayerKey = 'terrain' | 'roof' | 'buildings' | 'outline'
 
@@ -275,6 +276,13 @@ export default function SceneCanvas({
       new THREE.LineBasicMaterial({ color: 0xf59e0b, transparent: true, opacity: 0.55 }),
     )
     group.add(pin)
+    let candidateTower: THREE.Group | null = null
+    if (data.towerCandidate) {
+      candidateTower = makeTowerCandidate(data.towerCandidate)
+      group.add(candidateTower)
+      host.dataset.towerCandidate = 'true'
+      host.dataset.towerMeshes = String(candidateTower.children.length)
+    } else host.dataset.towerCandidate = 'false'
 
     // ---- fit de viewport (aspect-aware) ------------------------------------
     const fitView = (topDown = false) => {
@@ -320,7 +328,10 @@ export default function SceneCanvas({
       const contourMedian = cPts.length
         ? cPts.map((p) => p[1]).sort((a, b) => a - b)[Math.floor(cPts.length / 2)]
         : 0
-      const center = new THREE.Vector3(0, contourMedian, 0)
+      const towerBox = candidateTower ? new THREE.Box3().setFromObject(candidateTower) : null
+      const center = towerBox
+        ? towerBox.getCenter(new THREE.Vector3())
+        : new THREE.Vector3(0, contourMedian, 0)
       const radius = Math.max(
         Math.hypot(ring[0][0], ring[0][1]),
         ...ring.slice(1).map((pt) => Math.hypot(pt[0], pt[1])),
@@ -330,13 +341,14 @@ export default function SceneCanvas({
       const aspect = Math.max(camera.aspect, 0.01)
       const hFov = 2 * Math.atan(Math.tan(fov / 2) * aspect)
       const minFov = Math.min(fov, hFov) // o FOV mais estreito rege a distância
-      const dist = (radius / Math.sin(minFov / 2)) * 1.15
+      const fitRadius = towerBox ? towerBox.getSize(new THREE.Vector3()).length() / 2 : radius
+      const dist = (fitRadius / Math.sin(minFov / 2)) * 1.15
       if (dist > controls.maxDistance) controls.maxDistance = dist * 1.05
       camera.near = Math.max(dist / 200, 0.2)
       camera.far = Math.max(dist * 12, sceneRadius * 3)
       camera.updateProjectionMatrix()
       if (topDown) {
-        camera.position.set(0.02, contourMedian + dist, 0.02)
+        camera.position.set(center.x + 0.02, center.y + dist, center.z + 0.02)
       } else {
         const dirV = new THREE.Vector3(0.62, 0.42, 0.78).normalize()
         camera.position.copy(center).add(dirV.multiplyScalar(dist))
@@ -364,6 +376,7 @@ export default function SceneCanvas({
           outline.visible = v
           marker.visible = v
           pin.visible = v
+          if (candidateTower) candidateTower.visible = v
         }
       },
       setPointSize: (px) => {
