@@ -28,6 +28,12 @@ const Index = () => (
           Como chegar à Adapta
         </Link>
       </nav>
+      <Link
+        to="/empreendimentos"
+        className="inline-flex min-h-12 items-center rounded-xl border border-slate-600 px-5 py-3"
+      >
+        Consultar empreendimentos publicados
+      </Link>
       <aside className="border border-slate-700 rounded-xl p-5 text-sm leading-relaxed">
         <h2 className="text-slate-100 font-medium mb-2">Piloto do eixo sudoeste</h2>
         <p>

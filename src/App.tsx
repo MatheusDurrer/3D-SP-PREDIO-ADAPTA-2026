@@ -7,6 +7,7 @@ import { TooltipProvider } from '@/components/ui/tooltip'
 import Index from './pages/Index'
 import AdaptaArrival from './pages/AdaptaArrival'
 import NotFound from './pages/NotFound'
+import PublicInventory from './pages/PublicInventory'
 import Layout from './components/Layout'
 import { RequireAdmin } from '@/components/admin/RequireAdmin'
 import AdminLayout from '@/components/admin/AdminLayout'
@@ -71,6 +72,7 @@ const App = () => (
         />
 
         <Route path="/adapta" element={<AdaptaArrival />} />
+        <Route path="/empreendimentos" element={<PublicInventory />} />
         <Route
           path="/explorar"
           element={
