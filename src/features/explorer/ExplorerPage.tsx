@@ -12,6 +12,7 @@ const LAYER_LABELS: Record<LayerKey, string> = {
   inferred: 'Anexos aproximados · não validados',
   neighbor: 'Vizinho SSE · LiDAR 2020 aproximado',
   observedRoof: 'Comparar telhado medido · 2020',
+  westRoof: 'Telhado oeste observado · 2020',
 }
 
 export default function ExplorerPage() {
@@ -32,6 +33,12 @@ export default function ExplorerPage() {
     window.addEventListener('sp3d-texture-status', listener)
     return () => window.removeEventListener('sp3d-texture-status', listener)
   }, [])
+  const [westStatus, setWestStatus] = useState('loading')
+  useEffect(() => {
+    const listener = (event: Event) => setWestStatus(String((event as CustomEvent).detail))
+    window.addEventListener('sp3d-west-status', listener)
+    return () => window.removeEventListener('sp3d-west-status', listener)
+  }, [])
   const [pointSize, setPointSize] = useState(2.2)
   const [layers, setLayers] = useState<Record<LayerKey, boolean>>({
     terrain: true,
@@ -41,6 +48,7 @@ export default function ExplorerPage() {
     inferred: false,
     neighbor: false,
     observedRoof: false,
+    westRoof: false,
   })
   const [overview, setOverview] = useState(false)
   // Padrão: sem rotação automática (respeita reduced-motion por padrão; controle claro na UI).
@@ -132,6 +140,15 @@ export default function ExplorerPage() {
           <span className="sp3d-hud-density" data-testid="surroundings-status">
             Entorno não validado 2025 · cadastro histórico opcional
           </span>
+          {layers.westRoof && (
+            <span className="sp3d-hud-density" data-testid="west-roof-status">
+              {westStatus === 'ready'
+                ? 'Telhado oeste: retornos medidos 2020; sem paredes, sem fechar lacunas; nao valida 2025'
+                : westStatus === 'unavailable'
+                  ? 'Telhado oeste indisponivel; desligue e recarregue para tentar novamente'
+                  : 'Carregando superficie observada do telhado oeste...'}
+            </span>
+          )}
           {layers.observedRoof && (
             <span className="sp3d-hud-density" data-testid="observed-roof-status">
               Comparacao de superficie LiDAR 2020 · azul=baixo, laranja=alto · sem paredes ou recuos

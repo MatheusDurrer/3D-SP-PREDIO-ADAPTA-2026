@@ -6,6 +6,7 @@ import { makeTowerCandidate } from './tower'
 import { makeNeighborReference } from './neighbor'
 import { loadGroundTexture } from './texture'
 import { loadObservedRoof } from './observedRoof'
+import { loadWestRoof } from './westRoof'
 import {
   decodeGroundMesh,
   EXPECTED_GROUND_SHA256,
@@ -22,6 +23,7 @@ export type LayerKey =
   | 'inferred'
   | 'neighbor'
   | 'observedRoof'
+  | 'westRoof'
 
 export interface SceneApi {
   setLayerVisible(k: LayerKey, v: boolean): void
@@ -447,6 +449,33 @@ export default function SceneCanvas({
       })
       .finally(() => clearTimeout(observedRoofTimer))
 
+    let westRoof: THREE.Mesh | null = null
+    const westCtrl = new AbortController()
+    const westTimer = setTimeout(() => westCtrl.abort(), 5000)
+    host.dataset.westRoof = 'false'
+    host.dataset.westRoofStatus = 'loading'
+    loadWestRoof(westCtrl.signal)
+      .then((mesh) => {
+        if (sceneDisposed) {
+          mesh.geometry.dispose()
+          ;(mesh.material as THREE.Material).dispose()
+          return
+        }
+        westRoof = mesh
+        group.add(mesh)
+        mesh.visible = host.dataset.westRoof === 'true'
+        host.dataset.westRoofStatus = 'ready'
+        host.dataset.westRoofFaces = String(mesh.geometry.index!.count / 3)
+        window.dispatchEvent(new CustomEvent('sp3d-west-status', { detail: 'ready' }))
+      })
+      .catch((error) => {
+        if (!sceneDisposed) {
+          host.dataset.westRoofStatus = `unavailable: ${error instanceof Error ? error.message : String(error)}`
+          window.dispatchEvent(new CustomEvent('sp3d-west-status', { detail: 'unavailable' }))
+        }
+      })
+      .finally(() => clearTimeout(westTimer))
+
     const neighborGroup = data.neighborReference
       ? makeNeighborReference(data.neighborReference)
       : null
@@ -575,6 +604,7 @@ export default function SceneCanvas({
             host.dataset.viewMode = 'observed-roof-topdown'
           } else if (!v) fitAdaptaFocus(false)
         }
+        if (k === 'westRoof' && westRoof) westRoof.visible = v
         if (k === 'neighbor' && neighborGroup) neighborGroup.visible = v
         if (k === 'buildings') bGroup.visible = v
         if (k === 'inferred' && candidateTower) {
@@ -644,6 +674,8 @@ export default function SceneCanvas({
       textureCtrl.abort()
       observedRoofCtrl.abort()
       clearTimeout(observedRoofTimer)
+      westCtrl.abort()
+      clearTimeout(westTimer)
       appliedTexture?.dispose()
       cancelAnimationFrame(raf)
       ro.disconnect()
