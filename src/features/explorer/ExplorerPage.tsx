@@ -18,7 +18,7 @@ const LAYER_LABELS: Record<LayerKey, string> = {
 export default function ExplorerPage() {
   const { phase, retry, ground } = useSceneData()
   const reducedMotion = usePrefersReducedMotion()
-  useWebglLostAlert()
+  const webglStatus = useWebglLostAlert()
 
   const [textureState, setTextureState] = useState({
     status: 'pending',
@@ -118,6 +118,17 @@ export default function ExplorerPage() {
       <main className="sp3d-stage" onPointerDownCapture={onCanvasPointerDown}>
         {/* HUD mínimo: sempre visível, não esconde o aviso de precisão */}
         <div className="sp3d-hud">
+          {webglStatus !== 'ready' && (
+            <span
+              className="sp3d-hud-precision"
+              data-testid="webgl-status"
+              role={webglStatus === 'lost' ? 'alert' : 'status'}
+            >
+              {webglStatus === 'lost'
+                ? 'Cena interrompida: contexto WebGL perdido. Aguardando recuperacao; se persistir, recarregue a pagina.'
+                : 'Contexto WebGL restaurado. Retomando a cena.'}
+            </span>
+          )}
           <span className="sp3d-hud-precision" title="Aviso de precisão sempre visível">
             ⚠ Precisão não validada
           </span>

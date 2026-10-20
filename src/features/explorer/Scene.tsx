@@ -645,8 +645,26 @@ export default function SceneCanvas({
     controls.autoRotate = autoRotateOn
     controls.autoRotateSpeed = 0.6
     const clock = new THREE.Clock()
+    host.dataset.contextLost = 'false'
+    const onContextLost = (event: Event) => {
+      event.preventDefault()
+      host.dataset.contextLost = 'true'
+      host.dataset.rendered = 'false'
+    }
+    const onContextRestored = () => {
+      host.dataset.contextLost = 'false'
+      // The next successful frame, not the restore event, marks rendered=true.
+      host.dataset.rendered = 'false'
+    }
+    renderer.domElement.addEventListener('webglcontextlost', onContextLost)
+    renderer.domElement.addEventListener('webglcontextrestored', onContextRestored)
     const animate = () => {
       raf = requestAnimationFrame(animate)
+      if (renderer.getContext().isContextLost()) {
+        host.dataset.contextLost = 'true'
+        host.dataset.rendered = 'false'
+        return
+      }
       controls.autoRotate = autoRotateOn
       controls.update()
       if (!reducedMotion) {
@@ -671,6 +689,9 @@ export default function SceneCanvas({
     // ---- cleanup ---------------------------------------------------------------
     return () => {
       sceneDisposed = true
+      renderer.domElement.removeEventListener('webglcontextlost', onContextLost)
+      renderer.domElement.removeEventListener('webglcontextrestored', onContextRestored)
+      host.dataset.rendered = 'false'
       textureCtrl.abort()
       observedRoofCtrl.abort()
       clearTimeout(observedRoofTimer)

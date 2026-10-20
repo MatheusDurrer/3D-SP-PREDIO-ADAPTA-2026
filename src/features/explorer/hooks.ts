@@ -238,18 +238,32 @@ export function usePrefersReducedMotion(): boolean {
   return reduced
 }
 
-/** Detecta perda do contexto WebGL e dispara alerta nativo uma única vez. */
-export function useWebglLostAlert(): void {
+/** Non-blocking recovery status, scoped to the explorer canvas. */
+export function useWebglLostAlert(): 'ready' | 'lost' | 'restored' {
   const fired = useRef(false)
+  const [status, setStatus] = useState<'ready' | 'lost' | 'restored'>('ready')
   useEffect(() => {
-    const onLost = () => {
+    const isExplorer = (event: Event) =>
+      event.target instanceof HTMLCanvasElement &&
+      !!event.target.closest('[data-testid="scene-canvas"]')
+    const onLost = (event: Event) => {
+      if (!isExplorer(event)) return
+      event.preventDefault()
       if (fired.current) return
       fired.current = true
-      window.alert(
-        'Contexto WebGL perdido. A cena foi interrompida — recarregue a página para restaurar o preview.',
-      )
+      setStatus('lost')
+    }
+    const onRestored = (event: Event) => {
+      if (!isExplorer(event)) return
+      fired.current = false
+      setStatus('restored')
     }
     window.addEventListener('webglcontextlost', onLost, true)
-    return () => window.removeEventListener('webglcontextlost', onLost, true)
+    window.addEventListener('webglcontextrestored', onRestored, true)
+    return () => {
+      window.removeEventListener('webglcontextlost', onLost, true)
+      window.removeEventListener('webglcontextrestored', onRestored, true)
+    }
   }, [])
+  return status
 }
