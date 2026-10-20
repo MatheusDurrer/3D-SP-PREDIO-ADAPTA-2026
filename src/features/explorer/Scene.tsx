@@ -3,6 +3,13 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import type { BuildingFeature, SceneData } from './types'
 import { makeTowerCandidate } from './tower'
+import {
+  decodeGroundMesh,
+  EXPECTED_GROUND_SHA256,
+  GROUND_MESH_URL,
+  sha256Hex,
+  type GroundMesh,
+} from './ground'
 
 export type LayerKey = 'terrain' | 'roof' | 'buildings' | 'outline' | 'inferred'
 
@@ -156,6 +163,66 @@ export default function SceneCanvas({
     const terrainMesh = new THREE.Points(tGeo, terrainMaterial)
     group.add(terrainMesh)
 
+    // ---- solo como malha medida (ground-mesh-v1.bin), sem textura ----------
+    // Decodificador provado 1:1 (nV 12173, nF 22431, faceMiss 0). O dataset pode
+    // ainda não existir — fallback honesto para os pontos MDT medidos.
+    const groundGroup = new THREE.Group()
+    groundGroup.name = 'solo_malha_medida'
+    let groundReady = false
+    const buildGround = (mesh: GroundMesh, note: string) => {
+      if (!host.isConnected) return
+      const groundMat = new THREE.MeshStandardMaterial({
+        color: 0x5a6a7d,
+        roughness: 0.95,
+        metalness: 0.05,
+        side: THREE.DoubleSide,
+      })
+      const gGeo = new THREE.BufferGeometry()
+      gGeo.setAttribute('position', new THREE.BufferAttribute(mesh.positions, 3))
+      gGeo.setAttribute('uv', new THREE.BufferAttribute(mesh.uvs, 2))
+      gGeo.setIndex(new THREE.BufferAttribute(mesh.indices, 1))
+      gGeo.computeVertexNormals()
+      const gMesh = new THREE.Mesh(gGeo, groundMat)
+      gMesh.name = 'solo_mdt_2020'
+      gMesh.userData = {
+        fonte: 'MDT LiDAR 2020, células de 3 m medidas',
+        validacao: 'codec 1:1 (nV 12173, nF 22431, faceMiss 0)',
+        textura: 'sem textura; ortofoto 2020 pendente',
+      }
+      groundGroup.add(gMesh)
+      groundGroup.userData.faces = mesh.nF
+      groundReady = true
+      const on = host.dataset.terrain !== 'false'
+      terrainMesh.visible = false
+      groundGroup.visible = on
+      host.dataset.terrainMode = 'mesh'
+      host.dataset.terrainFaces = String(mesh.nF)
+      host.dataset.terrainNote = note || 'Solo MDT 2020 · malha medida sem textura'
+    }
+    if (data.ground) {
+      buildGround(data.ground, data.groundNote ?? '')
+    } else {
+      ;(async () => {
+        const ctrl = new AbortController()
+        const timer = setTimeout(() => ctrl.abort(), 5000)
+        try {
+          const resp = await fetch(GROUND_MESH_URL, { cache: 'no-store', signal: ctrl.signal })
+          if (!resp.ok) throw new Error(`HTTP ${resp.status}`)
+          const buf = await resp.arrayBuffer()
+          const sha = await sha256Hex(buf)
+          if (sha !== EXPECTED_GROUND_SHA256)
+            throw new Error(`SHA-256 divergente (${sha.slice(0, 12)}…)`)
+          buildGround(decodeGroundMesh(new Uint8Array(buf)), '')
+        } catch (e) {
+          const msg = e instanceof Error ? e.message : String(e)
+          host.dataset.terrainNote = `Solo MDT · pontos medidos (malha indisponível: ${msg})`
+        } finally {
+          clearTimeout(timer)
+        }
+      })()
+    }
+    group.add(groundGroup)
+
     // ---- pontos de telhado LiDAR class6 (cor por altura) ------------------
     const roofPts = data.layers.roof_points.points
     const rGeo = new THREE.BufferGeometry()
@@ -241,6 +308,11 @@ export default function SceneCanvas({
     host.dataset.buildingAxes = 'E,height,-N'
     host.dataset.surroundings2025 = 'NOT_VALIDATED'
     host.dataset.terrainCount = String(terrainPts.length)
+    host.dataset.terrainMode = groundReady ? 'mesh' : 'points'
+    host.dataset.terrainFaces = groundReady ? String(data.ground?.nF ?? 22431) : '0'
+    host.dataset.terrainNote = groundReady
+      ? 'Solo MDT 2020 · malha medida sem textura'
+      : 'Solo MDT · pontos medidos (malha do solo pendente)'
     host.dataset.roofCount = String(roofPts.length)
     host.dataset.contourCount = String(cPts.length)
 
@@ -384,7 +456,10 @@ export default function SceneCanvas({
       },
       setLayerVisible: (k, v) => {
         host.dataset[k] = String(v)
-        if (k === 'terrain') terrainMesh.visible = v
+        if (k === 'terrain') {
+          terrainMesh.visible = v && !groundReady
+          groundGroup.visible = v && groundReady
+        }
         if (k === 'roof') roofCloud.visible = v
         if (k === 'buildings') bGroup.visible = v
         if (k === 'inferred' && candidateTower) {

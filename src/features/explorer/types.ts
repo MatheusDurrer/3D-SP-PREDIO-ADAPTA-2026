@@ -39,6 +39,7 @@ export interface SampledMeta {
 
 export interface SceneData {
   towerCandidate?: import('./tower').TowerCandidate
+  ground?: import('./ground').GroundMesh
   schema: string
   status: string
   gate: string
@@ -57,6 +58,9 @@ export interface SceneData {
   }
   limits: string[]
   counts: Record<string, number>
+  groundMode?: 'mesh' | 'points'
+  groundFaces?: number
+  groundNote?: string
   layers: {
     terrain: { grid_m: number; method: string; points: number[][] }
     roof_points: {

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { SceneData } from './types'
 import { readDense } from './density'
+import { decodeGroundMesh, EXPECTED_GROUND_SHA256, GROUND_MESH_URL, sha256Hex } from './ground'
 
 type Phase =
   | { kind: 'loading' }
@@ -49,9 +50,11 @@ function validate(d: unknown): string | null {
 export function useSceneData(): {
   phase: Phase
   retry: () => void
+  ground: boolean
 } {
   const [phase, setPhase] = useState<Phase>({ kind: 'loading' })
   const [attempt, setAttempt] = useState(0)
+  const [ground, setGround] = useState(false)
 
   const retry = useCallback(() => setAttempt((a) => a + 1), [])
 
@@ -60,6 +63,7 @@ export function useSceneData(): {
     const ctrl = new AbortController()
     const timer = setTimeout(() => ctrl.abort(), FETCH_TIMEOUT_MS)
     setPhase({ kind: 'loading' })
+    setGround(false)
 
     fetch('/scene/adapta-v1.json', { cache: 'no-store', signal: ctrl.signal })
       .then((r) => {
@@ -100,6 +104,38 @@ export function useSceneData(): {
           ]
         } finally {
           clearTimeout(towerTimer)
+        }
+        // ---- malha do solo (opcional, timeout 5s, fallback honesto p/ pontos) --
+        const groundCtrl = new AbortController()
+        const groundTimer = setTimeout(() => groundCtrl.abort(), 5000)
+        try {
+          const gResp = await fetch(GROUND_MESH_URL, {
+            cache: 'no-store',
+            signal: groundCtrl.signal,
+          })
+          if (!gResp.ok) throw new Error(`HTTP ${gResp.status}`)
+          const gBuf = await gResp.arrayBuffer()
+          const gSha = await sha256Hex(gBuf)
+          if (gSha !== EXPECTED_GROUND_SHA256)
+            throw new Error(`SHA-256 divergente (${gSha.slice(0, 12)}…)`)
+          const mesh = decodeGroundMesh(new Uint8Array(gBuf))
+          if (!alive) return
+          data.ground = mesh
+          data.groundFaces = mesh.nF
+          data.groundMode = 'mesh'
+          setGround(true)
+          data.groundNote = 'Solo MDT 2020 · malha medida sem textura (ortofoto pendente)'
+          data.limits = [
+            ...data.limits,
+            `SOLO COMO MALHA MEDIDA: ${mesh.nV.toLocaleString('pt-BR')} vértices e ${mesh.nF.toLocaleString('pt-BR')} faces decodificados de ground-mesh-v1.bin (SHA-256 verificado); conectividade reconstruída por componentes 4-conectadas, 1:1 com o GLB validado (faceMiss 0). Sem textura: ortofoto 2020 ainda não integrada.`,
+          ]
+        } catch (gErr) {
+          if (!alive) return
+          const gMsg = gErr instanceof Error ? gErr.message : String(gErr)
+          data.groundMode = 'points'
+          data.groundNote = `Solo MDT · pontos medidos (malha indisponível: ${gMsg})`
+        } finally {
+          clearTimeout(groundTimer)
         }
         if (!alive) return
         const detailCtrl = new AbortController()
@@ -165,7 +201,7 @@ export function useSceneData(): {
     }
   }, [attempt])
 
-  return { phase, retry }
+  return { phase, retry, ground }
 }
 
 export function usePrefersReducedMotion(): boolean {

@@ -13,7 +13,7 @@ const LAYER_LABELS: Record<LayerKey, string> = {
 }
 
 export default function ExplorerPage() {
-  const { phase, retry } = useSceneData()
+  const { phase, retry, ground } = useSceneData()
   const reducedMotion = usePrefersReducedMotion()
   useWebglLostAlert()
 
@@ -111,7 +111,9 @@ export default function ExplorerPage() {
           {phase.kind === 'ready' && (
             <span className="sp3d-hud-density" data-testid="tower-status">
               {phase.data.towerCandidate
-                ? 'Torre sólida candidata · solo ainda em pontos'
+                ? ground
+                  ? 'Torre sólida candidata · solo em malha medida'
+                  : 'Torre sólida candidata · solo em pontos (fallback)'
                 : 'Torre candidata indisponível · modo técnico'}
             </span>
           )}
@@ -250,6 +252,13 @@ export default function ExplorerPage() {
                     Terreno MDT em pontos medidos (sem interpolação; cor = altura)
                   </li>
                 </ul>
+
+                {ground && (
+                  <p className="sp3d-counts">
+                    Solo MDT 2020 · malha medida sem textura —{' '}
+                    {phase.data.groundFaces?.toLocaleString('pt-BR')} faces · ortofoto 2020 pendente
+                  </p>
+                )}
 
                 {counts && (
                   <p className="sp3d-counts">
