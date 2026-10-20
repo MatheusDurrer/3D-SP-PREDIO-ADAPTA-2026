@@ -420,7 +420,11 @@ export default function SceneCanvas({
     const syncObservedRoof = () => {
       const on = host.dataset.observedRoof === 'true' && !!observedRoof
       if (observedRoof) observedRoof.visible = on
-      if (candidateTower) candidateTower.visible = !on && host.dataset.outline !== 'false'
+      const highlighted = host.dataset.outline !== 'false'
+      marker.visible = !on && highlighted
+      pin.visible = !on && highlighted
+      outline.visible = !on && highlighted
+      if (candidateTower) candidateTower.visible = !on && highlighted
     }
     host.dataset.observedRoof = 'false'
     host.dataset.observedRoofStatus = 'loading'
