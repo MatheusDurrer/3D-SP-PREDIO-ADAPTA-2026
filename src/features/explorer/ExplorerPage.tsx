@@ -11,6 +11,7 @@ const LAYER_LABELS: Record<LayerKey, string> = {
   outline: 'Destaque Adapta',
   inferred: 'Anexos aproximados · não validados',
   neighbor: 'Vizinho SSE · LiDAR 2020 aproximado',
+  observedRoof: 'Comparar telhado medido · 2020',
 }
 
 export default function ExplorerPage() {
@@ -39,6 +40,7 @@ export default function ExplorerPage() {
     outline: true,
     inferred: false,
     neighbor: false,
+    observedRoof: false,
   })
   const [overview, setOverview] = useState(false)
   // Padrão: sem rotação automática (respeita reduced-motion por padrão; controle claro na UI).
@@ -130,6 +132,12 @@ export default function ExplorerPage() {
           <span className="sp3d-hud-density" data-testid="surroundings-status">
             Entorno não validado 2025 · cadastro histórico opcional
           </span>
+          {layers.observedRoof && (
+            <span className="sp3d-hud-density" data-testid="observed-roof-status">
+              Comparacao de superficie LiDAR 2020 · azul=baixo, laranja=alto · sem paredes ou recuos
+              inferidos; se indisponivel, torre candidata preservada
+            </span>
+          )}
           {phase.kind === 'ready' && layers.neighbor && (
             <span className="sp3d-hud-density" data-testid="neighbor-status">
               {phase.data.neighborNote} · camada historica opcional

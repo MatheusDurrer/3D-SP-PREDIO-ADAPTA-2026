@@ -5,6 +5,7 @@ import type { BuildingFeature, SceneData } from './types'
 import { makeTowerCandidate } from './tower'
 import { makeNeighborReference } from './neighbor'
 import { loadGroundTexture } from './texture'
+import { loadObservedRoof } from './observedRoof'
 import {
   decodeGroundMesh,
   EXPECTED_GROUND_SHA256,
@@ -13,7 +14,14 @@ import {
   type GroundMesh,
 } from './ground'
 
-export type LayerKey = 'terrain' | 'roof' | 'buildings' | 'outline' | 'inferred' | 'neighbor'
+export type LayerKey =
+  | 'terrain'
+  | 'roof'
+  | 'buildings'
+  | 'outline'
+  | 'inferred'
+  | 'neighbor'
+  | 'observedRoof'
 
 export interface SceneApi {
   setLayerVisible(k: LayerKey, v: boolean): void
@@ -406,6 +414,35 @@ export default function SceneCanvas({
       host.dataset.inferred = 'false'
     } else host.dataset.towerCandidate = 'false'
 
+    let observedRoof: THREE.Mesh | null = null
+    const observedRoofCtrl = new AbortController()
+    const observedRoofTimer = setTimeout(() => observedRoofCtrl.abort(), 5000)
+    const syncObservedRoof = () => {
+      const on = host.dataset.observedRoof === 'true' && !!observedRoof
+      if (observedRoof) observedRoof.visible = on
+      if (candidateTower) candidateTower.visible = !on && host.dataset.outline !== 'false'
+    }
+    host.dataset.observedRoof = 'false'
+    host.dataset.observedRoofStatus = 'loading'
+    loadObservedRoof(observedRoofCtrl.signal)
+      .then((mesh) => {
+        if (sceneDisposed) {
+          mesh.geometry.dispose()
+          ;(mesh.material as THREE.Material).dispose()
+          return
+        }
+        observedRoof = mesh
+        group.add(mesh)
+        host.dataset.observedRoofStatus = 'ready'
+        host.dataset.observedRoofFaces = '1089'
+        syncObservedRoof()
+      })
+      .catch((error) => {
+        if (!sceneDisposed)
+          host.dataset.observedRoofStatus = `unavailable: ${error instanceof Error ? error.message : String(error)}`
+      })
+      .finally(() => clearTimeout(observedRoofTimer))
+
     const neighborGroup = data.neighborReference
       ? makeNeighborReference(data.neighborReference)
       : null
@@ -519,6 +556,7 @@ export default function SceneCanvas({
           groundGroup.visible = v && groundReady
         }
         if (k === 'roof') roofCloud.visible = v
+        if (k === 'observedRoof') syncObservedRoof()
         if (k === 'neighbor' && neighborGroup) neighborGroup.visible = v
         if (k === 'buildings') bGroup.visible = v
         if (k === 'inferred' && candidateTower) {
@@ -529,7 +567,7 @@ export default function SceneCanvas({
           outline.visible = v
           marker.visible = v
           pin.visible = v
-          if (candidateTower) candidateTower.visible = v
+          syncObservedRoof()
         }
       },
       setPointSize: (px) => {
@@ -586,6 +624,8 @@ export default function SceneCanvas({
     return () => {
       sceneDisposed = true
       textureCtrl.abort()
+      observedRoofCtrl.abort()
+      clearTimeout(observedRoofTimer)
       appliedTexture?.dispose()
       cancelAnimationFrame(raf)
       ro.disconnect()
