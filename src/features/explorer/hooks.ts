@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { SceneData } from './types'
+import { loadNeighborReference } from './neighbor'
 import { readDense } from './density'
 import { decodeGroundMesh, EXPECTED_GROUND_SHA256, GROUND_MESH_URL, sha256Hex } from './ground'
 
@@ -105,6 +106,25 @@ export function useSceneData(): {
         } finally {
           clearTimeout(towerTimer)
         }
+        const neighborCtrl = new AbortController()
+        const abortNeighbor = () => neighborCtrl.abort()
+        ctrl.signal.addEventListener('abort', abortNeighbor, { once: true })
+        const neighborTimer = setTimeout(abortNeighbor, 3500)
+        try {
+          data.neighborReference = await loadNeighborReference(neighborCtrl.signal)
+          data.neighborNote = 'SSE: LiDAR 2020, prisma aproximado de telhado; nao validado 2025'
+          data.limits = [
+            ...data.limits,
+            'VIZINHO SSE: altura e contorno de telhado derivados do LiDAR 2020; paredes verticais inferidas. Sem nome comercial, fachada, recuos ou heliponto modelados. Sete faixas iguais do prototipo descartadas por nao serem estratos medidos.',
+          ]
+        } catch (error) {
+          data.neighborNote = `Referencia SSE indisponivel: ${error instanceof Error ? error.message : String(error)}`
+          data.limits = [...data.limits, data.neighborNote]
+        } finally {
+          clearTimeout(neighborTimer)
+          ctrl.signal.removeEventListener('abort', abortNeighbor)
+        }
+        if (!alive) return
         // ---- malha do solo (opcional, timeout 5s, fallback honesto p/ pontos) --
         const groundCtrl = new AbortController()
         const groundTimer = setTimeout(() => groundCtrl.abort(), 5000)

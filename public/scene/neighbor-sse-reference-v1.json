@@ -1,0 +1,30 @@
+{
+  "schema": "sp3d-neighbor-reference/1",
+  "id": "sse80_plateaus.2020.torre_80m",
+  "epoch": 2020,
+  "status": "HISTORICAL_APPROXIMATION_NOT_VALIDATED_2025",
+  "name": null,
+  "origin_utm": [327514.0, 7389264.0],
+  "axes": "x=E,y=Z_abs,z=-N",
+  "ring_xz": [
+    [51.5, 55.5],
+    [52.5, 56.5],
+    [64.5, 79.5],
+    [71.5, 93.5],
+    [70.5, 94.5],
+    [64.5, 98.5],
+    [28.5, 116.5],
+    [25.5, 116.5],
+    [18.5, 103.5],
+    [6.5, 79.5],
+    [6.5, 78.5],
+    [7.5, 77.5],
+    [18.5, 71.5],
+    [33.5, 63.5],
+    [49.5, 55.5]
+  ],
+  "base_abs_m": 724.2,
+  "top_abs_m": 805.32,
+  "method": "Convex hull of roof cells extruded to deck; walls/footprint inferred, NOT surveyed facade. Equal-height strata discarded as synthetic.",
+  "source_profile_sha256": "8bd15195add10e977b04c89e42ddcf0db7415b128d9c45ce8a6611b3c59b89c1"
+}

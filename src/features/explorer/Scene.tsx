@@ -3,6 +3,7 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import type { BuildingFeature, SceneData } from './types'
 import { makeTowerCandidate } from './tower'
+import { makeNeighborReference } from './neighbor'
 import {
   decodeGroundMesh,
   EXPECTED_GROUND_SHA256,
@@ -11,7 +12,7 @@ import {
   type GroundMesh,
 } from './ground'
 
-export type LayerKey = 'terrain' | 'roof' | 'buildings' | 'outline' | 'inferred'
+export type LayerKey = 'terrain' | 'roof' | 'buildings' | 'outline' | 'inferred' | 'neighbor'
 
 export interface SceneApi {
   setLayerVisible(k: LayerKey, v: boolean): void
@@ -370,6 +371,28 @@ export default function SceneCanvas({
       host.dataset.inferred = 'false'
     } else host.dataset.towerCandidate = 'false'
 
+    const neighborGroup = data.neighborReference
+      ? makeNeighborReference(data.neighborReference)
+      : null
+    if (neighborGroup) group.add(neighborGroup)
+    host.dataset.neighborAvailable = String(!!neighborGroup)
+    host.dataset.neighbor = 'false'
+    host.dataset.neighborEpoch = neighborGroup ? '2020' : ''
+    host.dataset.neighborNote = data.neighborNote ?? 'Referencia SSE indisponivel'
+    if (neighborGroup) {
+      const bounds = new THREE.Box3().setFromObject(neighborGroup)
+      host.dataset.neighborBounds = [
+        bounds.min.x,
+        bounds.min.y,
+        bounds.min.z,
+        bounds.max.x,
+        bounds.max.y,
+        bounds.max.z,
+      ]
+        .map((v) => v.toFixed(2))
+        .join(',')
+    }
+
     // ---- fit de viewport (aspect-aware) ------------------------------------
     const fitView = (topDown = false) => {
       const box = new THREE.Box3().setFromObject(group)
@@ -461,6 +484,7 @@ export default function SceneCanvas({
           groundGroup.visible = v && groundReady
         }
         if (k === 'roof') roofCloud.visible = v
+        if (k === 'neighbor' && neighborGroup) neighborGroup.visible = v
         if (k === 'buildings') bGroup.visible = v
         if (k === 'inferred' && candidateTower) {
           const inferred = candidateTower.getObjectByName('Anexos_INFERIDOS_NOT_VALIDATED')

@@ -10,6 +10,7 @@ const LAYER_LABELS: Record<LayerKey, string> = {
   buildings: 'Cadastro antigo · não validado 2025',
   outline: 'Destaque Adapta',
   inferred: 'Anexos aproximados · não validados',
+  neighbor: 'Vizinho SSE · LiDAR 2020 aproximado',
 }
 
 export default function ExplorerPage() {
@@ -24,6 +25,7 @@ export default function ExplorerPage() {
     buildings: false, // Cadastro histórico: manter opcional até validar o entorno 2025+.
     outline: true,
     inferred: false,
+    neighbor: false,
   })
   const [overview, setOverview] = useState(false)
   // Padrão: sem rotação automática (respeita reduced-motion por padrão; controle claro na UI).
@@ -108,6 +110,11 @@ export default function ExplorerPage() {
           <span className="sp3d-hud-density" data-testid="surroundings-status">
             Entorno não validado 2025 · cadastro histórico opcional
           </span>
+          {phase.kind === 'ready' && layers.neighbor && (
+            <span className="sp3d-hud-density" data-testid="neighbor-status">
+              {phase.data.neighborNote} · camada historica opcional
+            </span>
+          )}
           {phase.kind === 'ready' && (
             <span className="sp3d-hud-density" data-testid="tower-status">
               {phase.data.towerCandidate

@@ -38,6 +38,8 @@ export interface SampledMeta {
 }
 
 export interface SceneData {
+  neighborReference?: import('./neighbor').NeighborReference
+  neighborNote?: string
   towerCandidate?: import('./tower').TowerCandidate
   ground?: import('./ground').GroundMesh
   schema: string
