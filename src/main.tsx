@@ -5,3 +5,11 @@ import './main.css'
 
 // @skip-protected: Do not remove. Required for React rendering.
 createRoot(document.getElementById('root')!).render(<App />)
+
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' }).catch((error) => {
+      console.warn('SP3D: instalacao indisponivel; aplicacao web continua funcionando', error)
+    })
+  })
+}
