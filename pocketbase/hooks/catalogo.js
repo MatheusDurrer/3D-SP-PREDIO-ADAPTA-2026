@@ -55,12 +55,19 @@ routerAdd(
     )
     const pois = $app.findRecordsByFilter('sp3d_pois', '', 'nome', 500, 0)
     const marcos = $app.findRecordsByFilter('sp3d_marcos', '', 'nome', 100, 0)
-    const configs = $app.findRecordsByFilter('sp3d_config', '', 'chave', 50, 0)
+    const configs = $app.findRecordsByFilter(
+      'sp3d_config',
+      "chave = 'principal' || chave = 'chegada_adapta'",
+      'chave',
+      50,
+      0,
+    )
 
     // Fase declarada no config (fonte única) — fallback defensivo se o seed
     // ainda não rodou. NUNCA hardcode de fase no código.
     let fase = 'validacao_piloto'
     for (let i = 0; i < configs.length; i++) {
+      if (configs[i].getString('chave') !== 'principal') continue
       try {
         const dados = JSON.parse(configs[i].getString('dados'))
         if (dados && dados.fase) fase = String(dados.fase)
@@ -75,6 +82,8 @@ routerAdd(
     for (let i = 0; i < marcos.length; i++) listaMarcos.push(pick(marcos[i], MARCO_FIELDS))
     const listaCfg = []
     for (let i = 0; i < configs.length; i++) {
+      const key = configs[i].getString('chave')
+      if (key !== 'principal' && key !== 'chegada_adapta') continue
       const c = pick(configs[i], CFG_FIELDS)
       // json field: get() devolve bytes crus — ler via getString + JSON.parse.
       try {
