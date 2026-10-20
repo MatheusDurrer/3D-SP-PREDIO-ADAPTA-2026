@@ -24,9 +24,14 @@ export async function loadNeighborReference(signal: AbortSignal): Promise<Neighb
   if (!response.ok) throw new Error(`HTTP ${response.status}`)
   const raw = await response.arrayBuffer()
   if (raw.byteLength > 12000) throw new Error('Perfil SSE excede limite')
-  if ((await sha256Hex(raw)) !== '555cd411cf2eb6f4073e993c0dd0e471637b796145f2c4610bb381ff68fd0279')
-    throw new Error('SHA-256 do perfil SSE divergente')
   const data = JSON.parse(new TextDecoder().decode(raw)) as NeighborReference
+  // Build formatting changes whitespace only. Hash normalized JSON, not indentation.
+  const normalized = new TextEncoder().encode(JSON.stringify(data))
+  if (
+    (await sha256Hex(normalized)) !==
+    'b977e69482881ee50d8e86be11b7fcd96756692e3002ed03c6c5f26f3db84a76'
+  )
+    throw new Error('SHA-256 do perfil SSE divergente')
   if (
     data.schema !== 'sp3d-neighbor-reference/1' ||
     data.epoch !== 2020 ||
