@@ -556,7 +556,21 @@ export default function SceneCanvas({
           groundGroup.visible = v && groundReady
         }
         if (k === 'roof') roofCloud.visible = v
-        if (k === 'observedRoof') syncObservedRoof()
+        if (k === 'observedRoof') {
+          syncObservedRoof()
+          if (v && observedRoof) {
+            const box = new THREE.Box3().setFromObject(observedRoof)
+            const center = box.getCenter(new THREE.Vector3())
+            const span = box.getSize(new THREE.Vector3()).length() / 2
+            const vfov = (camera.fov * Math.PI) / 180
+            const hfov = 2 * Math.atan(Math.tan(vfov / 2) * Math.max(camera.aspect, 0.01))
+            const distance = (span / Math.sin(Math.min(vfov, hfov) / 2)) * 1.25
+            camera.position.set(center.x, center.y + distance, center.z + 0.01)
+            controls.target.copy(center)
+            controls.update()
+            host.dataset.viewMode = 'observed-roof-topdown'
+          } else if (!v) fitAdaptaFocus(false)
+        }
         if (k === 'neighbor' && neighborGroup) neighborGroup.visible = v
         if (k === 'buildings') bGroup.visible = v
         if (k === 'inferred' && candidateTower) {
