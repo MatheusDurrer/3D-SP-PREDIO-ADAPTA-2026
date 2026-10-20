@@ -18,6 +18,19 @@ export default function ExplorerPage() {
   const reducedMotion = usePrefersReducedMotion()
   useWebglLostAlert()
 
+  const [textureState, setTextureState] = useState({
+    status: 'pending',
+    message: 'Ortofoto 2020 em carregamento; material neutro ate validacao',
+  })
+  useEffect(() => {
+    const listener = (event: Event) => {
+      const detail = (event as CustomEvent<{ status: string; message: string }>).detail
+      if (detail && typeof detail.status === 'string' && typeof detail.message === 'string')
+        setTextureState(detail)
+    }
+    window.addEventListener('sp3d-texture-status', listener)
+    return () => window.removeEventListener('sp3d-texture-status', listener)
+  }, [])
   const [pointSize, setPointSize] = useState(2.2)
   const [layers, setLayers] = useState<Record<LayerKey, boolean>>({
     terrain: true,
@@ -104,6 +117,13 @@ export default function ExplorerPage() {
             </span>
           )}
           {densityLabel && <span className="sp3d-hud-density">{densityLabel}</span>}
+          {ground && (
+            <span className="sp3d-hud-density" data-testid="texture-hud">
+              {textureState.status === 'ready'
+                ? 'Ortofoto GeoSampa 2020 · nao valida edificios atuais'
+                : textureState.message}
+            </span>
+          )}
           <span className="sp3d-hud-density" data-testid="inferred-status">
             Anexos: aproximações geométricas opcionais · não representam levantamento de fachadas
           </span>
@@ -256,14 +276,14 @@ export default function ExplorerPage() {
                       className="sp3d-dot"
                       style={{ background: 'linear-gradient(90deg,#14532d,#65a30d,#fde047)' }}
                     />{' '}
-                    Terreno MDT em pontos medidos (sem interpolação; cor = altura)
+                    Terreno MDT 2020 medido; ortofoto historica opcional, sem interpolar lacunas
                   </li>
                 </ul>
 
                 {ground && (
                   <p className="sp3d-counts">
-                    Solo MDT 2020 · malha medida sem textura —{' '}
-                    {phase.data.groundFaces?.toLocaleString('pt-BR')} faces · ortofoto 2020 pendente
+                    Solo MDT 2020 · {phase.data.groundFaces?.toLocaleString('pt-BR')} faces ·{' '}
+                    <span data-testid="texture-status">{textureState.message}</span>
                   </p>
                 )}
 

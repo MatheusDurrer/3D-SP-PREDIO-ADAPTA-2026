@@ -4,6 +4,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import type { BuildingFeature, SceneData } from './types'
 import { makeTowerCandidate } from './tower'
 import { makeNeighborReference } from './neighbor'
+import { loadGroundTexture } from './texture'
 import {
   decodeGroundMesh,
   EXPECTED_GROUND_SHA256,
@@ -170,8 +171,17 @@ export default function SceneCanvas({
     const groundGroup = new THREE.Group()
     groundGroup.name = 'solo_malha_medida'
     let groundReady = false
+    let sceneDisposed = false
+    let appliedTexture: THREE.Texture | null = null
+    const textureCtrl = new AbortController()
+    host.dataset.terrainTexture = 'pending'
+    const textureStatus = (status: string, message: string) => {
+      host.dataset.terrainTexture = status
+      if (status === 'ready') host.dataset.terrainNote = message
+      window.dispatchEvent(new CustomEvent('sp3d-texture-status', { detail: { status, message } }))
+    }
     const buildGround = (mesh: GroundMesh, note: string) => {
-      if (!host.isConnected) return
+      if (sceneDisposed || !host.isConnected) return
       const groundMat = new THREE.MeshStandardMaterial({
         color: 0x5a6a7d,
         roughness: 0.95,
@@ -199,6 +209,31 @@ export default function SceneCanvas({
       host.dataset.terrainMode = 'mesh'
       host.dataset.terrainFaces = String(mesh.nF)
       host.dataset.terrainNote = note || 'Solo MDT 2020 · malha medida sem textura'
+      const textureTimer = setTimeout(() => textureCtrl.abort(), 5000)
+      loadGroundTexture(textureCtrl.signal)
+        .then((texture) => {
+          if (sceneDisposed) {
+            texture.dispose()
+            return
+          }
+          appliedTexture = texture
+          groundMat.map = texture
+          groundMat.color.set(0xffffff)
+          groundMat.needsUpdate = true
+          gMesh.userData.textura = 'Ortofoto GeoSampa / Prefeitura de Sao Paulo 2020'
+          textureStatus(
+            'ready',
+            'Imagem GeoSampa / Prefeitura de Sao Paulo 2020; nao valida estruturas atuais',
+          )
+        })
+        .catch((error) => {
+          if (!sceneDisposed)
+            textureStatus(
+              'unavailable',
+              `Textura indisponivel: ${error instanceof Error ? error.message : String(error)}; material neutro`,
+            )
+        })
+        .finally(() => clearTimeout(textureTimer))
     }
     if (data.ground) {
       buildGround(data.ground, data.groundNote ?? '')
@@ -549,6 +584,9 @@ export default function SceneCanvas({
 
     // ---- cleanup ---------------------------------------------------------------
     return () => {
+      sceneDisposed = true
+      textureCtrl.abort()
+      appliedTexture?.dispose()
       cancelAnimationFrame(raf)
       ro.disconnect()
       controls.dispose()
