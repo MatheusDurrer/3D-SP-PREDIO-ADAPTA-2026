@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import type { BuildingFeature, SceneData } from './types'
 import { makeTowerCandidate } from './tower'
 
-export type LayerKey = 'terrain' | 'roof' | 'buildings' | 'outline'
+export type LayerKey = 'terrain' | 'roof' | 'buildings' | 'outline' | 'inferred'
 
 export interface SceneApi {
   setLayerVisible(k: LayerKey, v: boolean): void
@@ -291,7 +291,11 @@ export default function SceneCanvas({
       candidateTower = makeTowerCandidate(data.towerCandidate)
       group.add(candidateTower)
       host.dataset.towerCandidate = 'true'
-      host.dataset.towerMeshes = String(candidateTower.children.length)
+      host.dataset.towerMeshes = String(
+        candidateTower.children.filter((child) => child instanceof THREE.Mesh).length,
+      )
+      host.dataset.inferredProfiles = '2'
+      host.dataset.inferred = 'false'
     } else host.dataset.towerCandidate = 'false'
 
     // ---- fit de viewport (aspect-aware) ------------------------------------
@@ -338,7 +342,8 @@ export default function SceneCanvas({
       const contourMedian = cPts.length
         ? cPts.map((p) => p[1]).sort((a, b) => a - b)[Math.floor(cPts.length / 2)]
         : 0
-      const towerBox = candidateTower ? new THREE.Box3().setFromObject(candidateTower) : null
+      const towerBody = candidateTower?.getObjectByName('torre_corpo')
+      const towerBox = towerBody ? new THREE.Box3().setFromObject(towerBody) : null
       const center = towerBox
         ? towerBox.getCenter(new THREE.Vector3())
         : new THREE.Vector3(0, contourMedian, 0)
@@ -382,6 +387,10 @@ export default function SceneCanvas({
         if (k === 'terrain') terrainMesh.visible = v
         if (k === 'roof') roofCloud.visible = v
         if (k === 'buildings') bGroup.visible = v
+        if (k === 'inferred' && candidateTower) {
+          const inferred = candidateTower.getObjectByName('Anexos_INFERIDOS_NOT_VALIDATED')
+          if (inferred) inferred.visible = v
+        }
         if (k === 'outline') {
           outline.visible = v
           marker.visible = v

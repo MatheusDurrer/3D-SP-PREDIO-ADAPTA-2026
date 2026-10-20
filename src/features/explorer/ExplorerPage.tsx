@@ -9,6 +9,7 @@ const LAYER_LABELS: Record<LayerKey, string> = {
   roof: 'Telhados LiDAR',
   buildings: 'Cadastro antigo · não validado 2025',
   outline: 'Destaque Adapta',
+  inferred: 'Anexos aproximados · não validados',
 }
 
 export default function ExplorerPage() {
@@ -22,6 +23,7 @@ export default function ExplorerPage() {
     roof: false, // comparação técnica opcional; não encobrir a torre sólida
     buildings: false, // Cadastro histórico: manter opcional até validar o entorno 2025+.
     outline: true,
+    inferred: false,
   })
   const [overview, setOverview] = useState(false)
   // Padrão: sem rotação automática (respeita reduced-motion por padrão; controle claro na UI).
@@ -100,6 +102,9 @@ export default function ExplorerPage() {
             </span>
           )}
           {densityLabel && <span className="sp3d-hud-density">{densityLabel}</span>}
+          <span className="sp3d-hud-density" data-testid="inferred-status">
+            Anexos: aproximações geométricas opcionais · não representam levantamento de fachadas
+          </span>
           <span className="sp3d-hud-density" data-testid="surroundings-status">
             Entorno não validado 2025 · cadastro histórico opcional
           </span>

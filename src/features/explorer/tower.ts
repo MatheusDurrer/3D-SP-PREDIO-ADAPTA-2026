@@ -15,6 +15,10 @@ export function makeTowerCandidate(data: TowerCandidate): THREE.Group {
   const group = new THREE.Group()
   group.name = 'Adapta_CANDIDATE_NOT_VALIDATED'
   const colors = [0x354f6b, 0x415b73, 0x4e6478]
+  const inferred = new THREE.Group()
+  inferred.name = 'Anexos_INFERIDOS_NOT_VALIDATED'
+  inferred.visible = false
+  group.add(inferred)
   data.profiles.forEach((profile, index) => {
     if (
       !Number.isFinite(profile.base) ||
@@ -41,7 +45,14 @@ export function makeTowerCandidate(data: TowerCandidate): THREE.Group {
     })
     const mesh = new THREE.Mesh(geometry, material)
     mesh.name = profile.name
-    group.add(mesh)
+    mesh.userData = {
+      profile: profile.name,
+      geometryStatus:
+        index === 0 ? 'ROOF_EXTRUSION_CANDIDATE' : 'INFERRED_CONVEX_HULL_NOT_SURVEYED',
+      epoch: 2020,
+    }
+    if (index === 0) group.add(mesh)
+    else inferred.add(mesh)
     if (index === 0) {
       const positions: number[] = []
       for (
