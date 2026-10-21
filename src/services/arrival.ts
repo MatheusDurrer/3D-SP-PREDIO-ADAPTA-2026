@@ -21,6 +21,12 @@ export async function loadArrival(): Promise<ArrivalConfig> {
   return config as ArrivalConfig
 }
 
+/** Address search: the visitor confirms the matching destination in Waze. */
+export function wazeUrl(address: string): string {
+  const params = new URLSearchParams({ q: address, utm_source: 'adapta_eventos' })
+  return `https://waze.com/ul?${params.toString()}`
+}
+
 export function directionsUrl(address: string, mode: 'walking' | 'driving'): string {
   const params = new URLSearchParams({ api: '1', destination: address, travelmode: mode })
   return `https://www.google.com/maps/dir/?${params.toString()}`

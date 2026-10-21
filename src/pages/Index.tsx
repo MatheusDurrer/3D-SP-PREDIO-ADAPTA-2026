@@ -4,45 +4,43 @@ const Index = () => (
   <main className="min-h-screen bg-slate-950 text-slate-200 px-6 py-16 flex items-center justify-center">
     <section className="max-w-xl space-y-6" aria-labelledby="project-title">
       <p className="text-sm uppercase tracking-[0.3em] text-amber-300">
-        São Paulo 3D · Validação de dados
+        Adapta · guia do participante
       </p>
       <h1 id="project-title" className="text-4xl font-light leading-tight">
-        Uma cidade real começa com dados reais.
+        Sua imersão começa na Adapta.
       </h1>
       <p className="text-slate-400 leading-relaxed">
-        O explorador técnico do entorno da Adapta já está disponível em preview, com uma amostra dos
-        dados LiDAR e terreno medidos. A precisão externa não foi validada; esta visualização não
-        representa a cidade inteira nem uma réplica visual concluída.
+        Encontre o endereço do evento e abra o destino no Google Maps ou no Waze. O mapa da região
+        está em construção para ajudar você a conhecer o entorno e os bairros vizinhos antes de
+        chegar.
       </p>
       <nav aria-label="Explorar o projeto" className="flex flex-wrap gap-3">
         <Link
-          to="/explorar"
-          className="inline-flex min-h-12 items-center rounded-xl bg-amber-300 px-5 py-3 font-medium text-slate-950"
-        >
-          Abrir explorador 3D
-        </Link>
-        <Link
           to="/adapta"
-          className="inline-flex min-h-12 items-center rounded-xl border border-slate-600 px-5 py-3"
+          className="inline-flex min-h-12 items-center rounded-xl bg-amber-300 px-5 py-3 font-medium text-slate-950"
         >
           Como chegar à Adapta
         </Link>
+        <Link
+          to="/explorar"
+          className="inline-flex min-h-12 items-center rounded-xl border border-slate-600 px-5 py-3"
+        >
+          Conhecer o entorno · preview 3D
+        </Link>
       </nav>
-      <Link
-        to="/empreendimentos"
-        className="inline-flex min-h-12 items-center rounded-xl border border-slate-600 px-5 py-3"
-      >
-        Consultar empreendimentos publicados
-      </Link>
+
       <aside className="border border-slate-700 rounded-xl p-5 text-sm leading-relaxed">
-        <h2 className="text-slate-100 font-medium mb-2">Piloto do eixo sudoeste</h2>
+        <h2 className="text-slate-100 font-medium mb-2">Explore antes de chegar</h2>
         <p>
-          Pinheiros, Jardins, Itaim, Vila Olímpia, Moema e Ibirapuera. Nenhuma cobertura, precisão
-          ou performance foi aprovada nesta etapa.
+          O preview mostra uma amostra histórica do entorno, não um mapa atual concluído. O tour
+          virtual do escritório no 32º andar será construído a partir de imagens reais. Os
+          restaurantes para almoço serão destacados após a seleção da organização.
         </p>
       </aside>
       <p className="text-xs text-slate-500">
-        Projeto técnico em construção. Não é uma demonstração da cidade concluída.
+        Preview em construção. Dados históricos de 2020 não comprovam a forma atual dos prédios.
+        Para dirigir, utilize os aplicativos de navegação; o acesso específico do evento ainda será
+        confirmado.
       </p>
       <footer className="text-xs text-slate-400 border-t border-slate-800 pt-5 space-y-2">
         <p>Fontes previstas no PRD — uso e licenças em validação:</p>

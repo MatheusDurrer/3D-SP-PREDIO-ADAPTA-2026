@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { loadArrival, directionsUrl, type ArrivalConfig } from '@/services/arrival'
+import { loadArrival, directionsUrl, wazeUrl, type ArrivalConfig } from '@/services/arrival'
 
 export default function AdaptaArrival() {
   const [config, setConfig] = useState<ArrivalConfig | null>(null)
@@ -42,7 +42,7 @@ export default function AdaptaArrival() {
     <main className="min-h-screen bg-slate-950 px-5 py-10 text-slate-100 sm:py-16">
       <div className="mx-auto max-w-2xl space-y-7">
         <Link to="/" className="text-sm text-slate-400 underline">
-          São Paulo 3D · projeto em construção
+          Guia Adapta · voltar ao início
         </Link>
         <header className="space-y-3">
           <p className="text-xs uppercase tracking-[.25em] text-amber-300">Seu destino no evento</p>
@@ -97,7 +97,7 @@ export default function AdaptaArrival() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Trajeto a pé ↗
+                  Google Maps · a pé ↗
                 </a>
                 <a
                   className={button}
@@ -105,12 +105,22 @@ export default function AdaptaArrival() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Trajeto de carro ↗
+                  Google Maps · de carro ↗
                 </a>
               </div>
+              <a
+                className={`${button} w-full`}
+                href={wazeUrl(config.endereco)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Abrir endereço no Waze ↗
+              </a>
               <p className="text-xs leading-relaxed text-slate-400">
-                Abre o Google Maps em outra aba. A origem e o trajeto são definidos lá. Este site
-                não solicita nem armazena sua localização.
+                O Waze abre uma busca pelo endereço: confira o destino e inicie a navegação no
+                aplicativo. Google Maps e Waze definem a origem e o trajeto. Este site não solicita
+                nem armazena sua localização. A indicação no mapa não confirma a portaria de entrada
+                do evento.
               </p>
             </section>
             <aside className="space-y-2 rounded-xl border border-amber-700/50 p-5">
