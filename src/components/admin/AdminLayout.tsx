@@ -48,7 +48,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <span className="w-7 h-7 rounded bg-amber-400/10 border border-amber-400/30 flex items-center justify-center shrink-0">
                 <LayoutDashboard className="w-3.5 h-3.5 text-amber-300" aria-hidden />
               </span>
-              <span className="text-sm font-medium text-slate-100 truncate">SP3D · Admin</span>
+              <img src="/brand/adapta-logo.svg" alt="Adapta · Admin" className="brand-logo" />
             </Link>
           </div>
 
@@ -103,7 +103,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       <footer className="border-t border-slate-800/60 py-3">
         <p className="max-w-6xl mx-auto px-4 text-[11px] text-slate-600">
-          São Paulo 3D — administração. Configuração, POIs e marcos: fase posterior do PRD.
+          Adapta — administração do guia. Acesso restrito à organização.
         </p>
       </footer>
     </div>

@@ -1,14 +1,14 @@
 {
   "id": "/",
-  "name": "São Paulo 3D · Protótipo Adapta",
-  "short_name": "SP3D",
-  "description": "Protótipo geoespacial em construção. Precisão externa e fidelidade atual dos edifícios ainda não validadas.",
+  "name": "Guia Adapta · Eventos e Imersões",
+  "short_name": "Guia Adapta",
+  "description": "Guia do participante: região, chegada à Adapta e navegação em Google Maps e Waze. Mapa 3D em construção.",
   "lang": "pt-BR",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#020617",
-  "theme_color": "#020617",
+  "background_color": "#151611",
+  "theme_color": "#767665",
   "icons": [
     { "src": "/pwa/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "/pwa/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }

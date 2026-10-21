@@ -4,8 +4,8 @@
   display: flex;
   flex-direction: column;
   height: 100dvh;
-  background: #0b0f14;
-  color: #e2e8f0;
+  background: var(--adapta-base);
+  color: var(--adapta-300);
   font-family:
     system-ui,
     -apple-system,
@@ -25,8 +25,8 @@
   justify-content: space-between;
   gap: 8px;
   padding: 8px 12px;
-  background: #0d121a;
-  border-bottom: 1px solid #1f2937;
+  background: var(--adapta-surface);
+  border-bottom: 1px solid var(--adapta-700);
   flex-shrink: 0;
   flex-wrap: wrap;
 }
@@ -41,7 +41,7 @@
 .sp3d-explorer .sp3d-hdr p {
   margin: 2px 0 0;
   font-size: 10.5px;
-  color: #f59e0b;
+  color: var(--adapta-500);
   letter-spacing: 0.06em;
 }
 .sp3d-explorer .sp3d-hdr-actions {
@@ -53,8 +53,8 @@
   justify-content: flex-end;
 }
 .sp3d-explorer .sp3d-badge {
-  border: 1px solid #f59e0b;
-  color: #fbbf24;
+  border: 1px solid var(--adapta-500);
+  color: var(--adapta-300);
   font-size: 10px;
   padding: 3px 8px;
   border-radius: 999px;
@@ -81,8 +81,8 @@
   left: 12px;
   bottom: 12px;
   max-width: 470px;
-  background: rgba(13, 18, 26, 0.93);
-  border: 1px solid #263241;
+  background: rgba(32, 33, 27, 0.95);
+  border: 1px solid var(--adapta-700);
   border-radius: 12px;
   padding: 10px 12px;
   backdrop-filter: blur(6px);
@@ -94,9 +94,9 @@
   flex-wrap: wrap;
 }
 .sp3d-explorer .sp3d-btn {
-  background: #16202e;
-  border: 1px solid #2b3a4d;
-  color: #e2e8f0;
+  background: var(--adapta-surface);
+  border: 1px solid var(--adapta-700);
+  color: var(--adapta-300);
   padding: 8px 11px;
   border-radius: 8px;
   font-size: 12.5px;
@@ -108,20 +108,20 @@
   justify-content: center;
 }
 .sp3d-explorer .sp3d-btn:hover {
-  border-color: #3f5470;
+  border-color: var(--adapta-500);
 }
 .sp3d-explorer .sp3d-btn-active {
-  border-color: #f59e0b;
-  color: #fbbf24;
+  border-color: var(--adapta-500);
+  color: var(--adapta-300);
 }
 .sp3d-explorer .sp3d-btn-primary {
-  background: #f59e0b;
-  border-color: #f59e0b;
-  color: #0b0f14;
+  background: var(--adapta-500);
+  border-color: var(--adapta-500);
+  color: var(--adapta-base);
   font-weight: 600;
 }
 .sp3d-explorer .sp3d-btn-primary:hover {
-  background: #fbbf24;
+  background: var(--adapta-300);
 }
 .sp3d-explorer .sp3d-btn:disabled {
   opacity: 0.5;
@@ -134,16 +134,16 @@
   gap: 8px;
   margin-top: 9px;
   font-size: 12px;
-  color: #94a3b8;
+  color: var(--adapta-300);
 }
 .sp3d-explorer .sp3d-slider input {
   flex: 1;
-  accent-color: #f59e0b;
+  accent-color: var(--adapta-500);
 }
 .sp3d-explorer .sp3d-val {
   min-width: 34px;
   text-align: right;
-  color: #e2e8f0;
+  color: var(--adapta-300);
   font-variant-numeric: tabular-nums;
 }
 
@@ -152,7 +152,7 @@
   margin: 9px 0 0;
   padding: 0;
   font-size: 11.5px;
-  color: #cbd5e1;
+  color: var(--adapta-300);
   display: grid;
   gap: 3px;
 }
@@ -175,17 +175,17 @@
 .sp3d-explorer .sp3d-counts {
   margin: 8px 0 0;
   font-size: 10.5px;
-  color: #7c8b9d;
+  color: var(--adapta-300);
 }
 
 .sp3d-explorer .sp3d-limits {
   margin-top: 8px;
   font-size: 11px;
-  color: #94a3b8;
+  color: var(--adapta-300);
 }
 .sp3d-explorer .sp3d-limits summary {
   cursor: pointer;
-  color: #cbd5e1;
+  color: var(--adapta-300);
 }
 .sp3d-explorer .sp3d-limits ul {
   margin: 6px 0;
@@ -194,7 +194,7 @@
   gap: 3px;
 }
 .sp3d-explorer .sp3d-prov {
-  color: #64748b;
+  color: var(--adapta-300);
   font-size: 10px;
   margin: 4px 0 0;
 }
@@ -213,8 +213,8 @@
 .sp3d-explorer .sp3d-spinner {
   width: 34px;
   height: 34px;
-  border: 3px solid #2b3a4d;
-  border-top-color: #f59e0b;
+  border: 3px solid var(--adapta-700);
+  border-top-color: var(--adapta-500);
   border-radius: 50%;
   margin: 0 auto 10px;
   animation: sp3d-spin 0.9s linear infinite;
@@ -226,8 +226,8 @@
 }
 .sp3d-explorer .sp3d-errbox {
   max-width: 380px;
-  background: #0d121a;
-  border: 1px solid #263241;
+  background: var(--adapta-surface);
+  border: 1px solid var(--adapta-700);
   border-radius: 12px;
   padding: 18px;
   text-align: left;
@@ -242,7 +242,7 @@
   word-break: break-word;
 }
 .sp3d-explorer .sp3d-errhint {
-  color: #64748b;
+  color: var(--adapta-300);
   font-size: 11px;
 }
 .sp3d-explorer .sp3d-errbox .sp3d-btn {
@@ -310,20 +310,20 @@
   white-space: nowrap;
 }
 .sp3d-explorer .sp3d-hud-precision {
-  background: rgba(245, 158, 11, 0.14);
-  border: 1px solid rgba(245, 158, 11, 0.55);
-  color: #fbbf24;
+  background: rgba(118, 118, 101, 0.18);
+  border: 1px solid rgba(118, 118, 101, 0.7);
+  color: var(--adapta-300);
   font-weight: 600;
 }
 .sp3d-explorer .sp3d-hud-counts,
 .sp3d-explorer .sp3d-hud-density {
-  background: rgba(13, 18, 26, 0.82);
-  border: 1px solid #263241;
-  color: #cbd5e1;
+  background: rgba(32, 33, 27, 0.92);
+  border: 1px solid var(--adapta-700);
+  color: var(--adapta-300);
   font-variant-numeric: tabular-nums;
 }
 .sp3d-explorer .sp3d-hud-density {
-  color: #94a3b8;
+  color: var(--adapta-300);
 }
 
 /* ---- Painel colapsável (desktop: cartão compacto; mobile: drawer) ------ */
@@ -339,19 +339,19 @@
   min-height: 44px;
   background: transparent;
   border: none;
-  color: #e2e8f0;
+  color: var(--adapta-300);
   font-size: 12.5px;
   letter-spacing: 0.02em;
   cursor: pointer;
   padding: 0 4px;
 }
 .sp3d-explorer .sp3d-panel-toggle:focus-visible {
-  outline: 2px solid #f59e0b;
+  outline: 2px solid var(--adapta-500);
   outline-offset: 2px;
   border-radius: 6px;
 }
 .sp3d-explorer .sp3d-panel-chevron {
-  color: #f59e0b;
+  color: var(--adapta-500);
   font-size: 13px;
 }
 .sp3d-explorer .sp3d-panel-closed .sp3d-panel-body {
@@ -384,7 +384,7 @@
     width: 36px;
     height: 3px;
     border-radius: 999px;
-    background: #3f4a5a;
+    background: var(--adapta-700);
   }
   .sp3d-explorer .sp3d-panel-toggle {
     min-height: 48px;
@@ -397,7 +397,7 @@
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
     padding: 2px 12px calc(12px + env(safe-area-inset-bottom));
-    border-top: 1px solid #1f2937;
+    border-top: 1px solid var(--adapta-700);
   }
   .sp3d-explorer .sp3d-panel-closed {
     transform: translateY(calc(100% - 48px));

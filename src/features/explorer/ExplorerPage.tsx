@@ -99,7 +99,15 @@ export default function ExplorerPage() {
     <div className="sp3d-explorer">
       <header className="sp3d-hdr">
         <div>
-          <h1>SP3D · ADAPTA — MODELO VOLUMÉTRICO CANDIDATO</h1>
+          <Link to="/" aria-label="Adapta · início">
+            <img
+              src="/brand/adapta-logo.svg"
+              alt="Adapta"
+              className="brand-logo"
+              style={{ width: 100, height: 24 }}
+            />
+          </Link>
+          <h1>ADAPTA · EXPLORADOR DO ENTORNO</h1>
           <p>
             PRECISÃO EXTERNA NÃO VALIDADA · gate NOT_VALIDATED · amostra decimada do dataset real
           </p>

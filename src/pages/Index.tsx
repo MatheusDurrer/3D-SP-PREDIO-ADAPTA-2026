@@ -2,7 +2,8 @@ import { Link } from 'react-router-dom'
 
 const Index = () => (
   <main className="min-h-screen bg-slate-950 text-slate-200 px-6 py-16 flex items-center justify-center">
-    <section className="max-w-xl space-y-6" aria-labelledby="project-title">
+    <section className="max-w-3xl space-y-7" aria-labelledby="project-title">
+      <img src="/brand/adapta-logo.svg" alt="Adapta" className="brand-logo" />
       <p className="text-sm uppercase tracking-[0.3em] text-amber-300">
         Adapta · guia do participante
       </p>
@@ -24,7 +25,10 @@ const Index = () => (
           to="/explorar"
           className="inline-flex min-h-12 items-center rounded-xl border border-slate-600 px-5 py-3"
         >
-          Conhecer o entorno · preview 3D
+          Explorar modelo 3D
+        </Link>
+        <Link to="/instalar" className="brand-link brand-install">
+          Instalar aplicativo ↗
         </Link>
       </nav>
 
@@ -38,11 +42,11 @@ const Index = () => (
       </aside>
       <p className="text-xs text-slate-500">
         Preview em construção. Dados históricos de 2020 não comprovam a forma atual dos prédios.
-        Para dirigir, utilize os aplicativos de navegação; o acesso específico do evento ainda será
-        confirmado.
+        Para dirigir, utilize os aplicativos de navegação; confira as orientações de acesso do
+        evento.
       </p>
       <footer className="text-xs text-slate-400 border-t border-slate-800 pt-5 space-y-2">
-        <p>Fontes previstas no PRD — uso e licenças em validação:</p>
+        <p>Fontes do mapa — uso e licenças em validação:</p>
         <p>
           <a
             className="underline underline-offset-4"

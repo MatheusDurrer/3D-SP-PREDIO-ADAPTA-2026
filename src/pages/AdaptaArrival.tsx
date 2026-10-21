@@ -48,7 +48,11 @@ export default function AdaptaArrival() {
     <main className="min-h-screen bg-slate-950 px-5 py-10 text-slate-100 sm:py-16">
       <div className="mx-auto max-w-2xl space-y-7">
         <Link to="/" className="text-sm text-slate-400 underline">
-          Guia Adapta · voltar ao início
+          <img
+            src="/brand/adapta-logo.svg"
+            alt="Adapta · voltar ao início"
+            className="brand-logo"
+          />
         </Link>
         <header className="space-y-3">
           <p className="text-xs uppercase tracking-[.25em] text-amber-300">Seu destino no evento</p>

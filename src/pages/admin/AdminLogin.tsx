@@ -33,9 +33,12 @@ export default function AdminLogin() {
           <div className="w-11 h-11 rounded-lg bg-amber-400/10 border border-amber-400/30 flex items-center justify-center mb-4">
             <MapPinned className="w-5 h-5 text-amber-300" aria-hidden />
           </div>
-          <h1 className="text-lg font-medium text-slate-100 tracking-wide">São Paulo 3D</h1>
+          <img src="/brand/adapta-logo.svg" alt="Adapta" className="brand-logo mx-auto" />
+          <h1 className="text-lg font-medium text-slate-100 tracking-wide">
+            Guia Adapta · administração
+          </h1>
           <p className="text-xs text-slate-500 mt-1 tracking-wider uppercase">
-            Administração de empreendimentos
+            Acesso restrito à organização
           </p>
         </div>
 

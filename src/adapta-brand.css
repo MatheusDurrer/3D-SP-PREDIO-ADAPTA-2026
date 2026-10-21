@@ -1,0 +1,136 @@
+/* Adapta brand: owner-supplied palette and Special Gothic Adapta. */
+@font-face {
+  font-family: 'Special Gothic Adapta';
+  src: url('/brand/SpecialGothicAdapta-Regular.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Special Gothic Adapta';
+  src: url('/brand/SpecialGothicAdapta-Bold.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 600 900;
+  font-display: swap;
+}
+:root,
+.dark {
+  --adapta-300: #d7d7d0;
+  --adapta-500: #767665;
+  --adapta-700: #45463a;
+  --adapta-base: #151611;
+  --adapta-surface: #20211b;
+  --adapta-ink: #fff;
+  --background: 72 12.8205% 7.6471%;
+  --foreground: 60 8% 94%;
+  --card: 72 10% 12%;
+  --card-foreground: 60 8% 94%;
+  --popover: 72 10% 12%;
+  --popover-foreground: 60 8% 94%;
+  --primary: 60 7.7626% 42.9412%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 65 9.375% 25.098%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 72 10% 12%;
+  --muted-foreground: 60 8% 78%;
+  --accent: 60 7.7626% 42.9412%;
+  --accent-foreground: 0 0% 100%;
+  --border: 65 9.375% 25.098%;
+  --input: 65 9.375% 25.098%;
+  --ring: 60 8% 82%;
+  --sidebar-background: 72 12.8205% 7.6471%;
+  --sidebar-foreground: 60 8% 94%;
+  --sidebar-primary: 60 7.7626% 42.9412%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 65 9.375% 25.098%;
+  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-border: 65 9.375% 25.098%;
+  --sidebar-ring: 60 8% 82%;
+}
+body {
+  margin: 0;
+  background: var(--adapta-base);
+  color: var(--adapta-ink);
+  font-family: 'Special Gothic Adapta', sans-serif;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+.brand-logo {
+  width: 160px;
+  height: 46px;
+  object-fit: contain;
+  object-position: left;
+}
+.brand-install {
+  background: var(--adapta-300);
+  color: var(--adapta-base);
+  border: 2px solid white;
+  box-shadow: 0 0 0 4px rgb(215 215 208 / 0.12);
+  font-weight: 600;
+}
+.brand-install:hover {
+  background: white;
+}
+.brand-page {
+  background: var(--adapta-base);
+  color: var(--adapta-ink);
+  min-height: 100dvh;
+  padding: 32px 20px;
+}
+.brand-wrap {
+  max-width: 1024px;
+  margin: auto;
+}
+.brand-card {
+  background: var(--adapta-surface);
+  border: 1px solid var(--adapta-700);
+  border-radius: 20px;
+  padding: 24px;
+}
+.brand-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 12px 20px;
+  border: 1px solid var(--adapta-500);
+  border-radius: 12px;
+}
+.brand-link:focus-visible,
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--adapta-300);
+  outline-offset: 4px;
+}
+.sp3d-explorer {
+  font-family: 'Special Gothic Adapta', sans-serif !important;
+  background: var(--adapta-base) !important;
+  color: var(--adapta-300) !important;
+}
+.sp3d-explorer .sp3d-hdr,
+.sp3d-explorer .sp3d-panel {
+  background: var(--adapta-surface) !important;
+  border-color: var(--adapta-700) !important;
+}
+.sp3d-explorer .sp3d-btn,
+.sp3d-explorer .sp3d-badge,
+.sp3d-explorer .sp3d-hud-precision {
+  color: var(--adapta-300) !important;
+  border-color: var(--adapta-500) !important;
+  background: var(--adapta-surface) !important;
+}
+.sp3d-explorer .sp3d-hdr p {
+  color: var(--adapta-300) !important;
+}
+@media (max-width: 480px) {
+  .brand-logo {
+    width: 140px;
+  }
+  .brand-page {
+    padding: 24px 20px;
+  }
+}
