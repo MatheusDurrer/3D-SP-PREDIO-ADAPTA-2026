@@ -31,3 +31,16 @@ export function directionsUrl(address: string, mode: 'walking' | 'driving'): str
   const params = new URLSearchParams({ api: '1', destination: address, travelmode: mode })
   return `https://www.google.com/maps/dir/?${params.toString()}`
 }
+
+/**
+ * Posição do edifício para o mapa da região. Fonte: centróide LiDAR 2020 da torre NORTE
+ * (public/scene/adapta-v1.json → adapta_contour.centroid_wgs84, identidade
+ * ADAPTA_BERRINI_ONE_NORTH, andares 31–32 confirmados pela organização). Medição histórica —
+ * não indica portaria de entrada; o visitante navega pelo endereço. O geocode OSM do número
+ * 105 ("Thera Corporate") aponta a torre sul do complexo e NÃO é usado.
+ */
+export const MAPA_REGIAO = {
+  lat: -23.597969459597447,
+  lng: -46.6904645773493,
+  bbox: '-46.6984646,-23.6019695,-46.6824646,-23.5939695',
+}

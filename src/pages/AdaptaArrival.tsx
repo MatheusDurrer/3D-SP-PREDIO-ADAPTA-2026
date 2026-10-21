@@ -1,6 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { loadArrival, directionsUrl, wazeUrl, type ArrivalConfig } from '@/services/arrival'
+import {
+  loadArrival,
+  directionsUrl,
+  wazeUrl,
+  MAPA_REGIAO,
+  type ArrivalConfig,
+} from '@/services/arrival'
 
 export default function AdaptaArrival() {
   const [config, setConfig] = useState<ArrivalConfig | null>(null)
@@ -122,6 +128,30 @@ export default function AdaptaArrival() {
                 nem armazena sua localização. A indicação no mapa não confirma a portaria de entrada
                 do evento.
               </p>
+            </section>
+            <section className="space-y-3 rounded-2xl border border-slate-700 bg-slate-900 p-5 sm:p-7">
+              <h2 className="text-xl">A região</h2>
+              <p className="text-sm text-slate-400">
+                Localização do edifício no mapa da região (Berrini / Vila Olímpia).
+              </p>
+              <iframe
+                title="Mapa da região do evento · OpenStreetMap"
+                src={`https://www.openstreetmap.org/export/embed.html?bbox=${MAPA_REGIAO.bbox}&layer=mapnik&marker=${MAPA_REGIAO.lat},${MAPA_REGIAO.lng}`}
+                loading="lazy"
+                className="h-72 w-full rounded-lg border border-slate-700 sm:h-80"
+              />
+              <p className="text-xs leading-relaxed text-slate-400">
+                Mapa © OpenStreetMap contributors (ODbL). O marcador indica o edifício, não a
+                portaria de entrada do evento.
+              </p>
+              <a
+                className={button}
+                href={`https://www.openstreetmap.org/?mlat=${MAPA_REGIAO.lat}&mlon=${MAPA_REGIAO.lng}#map=17/${MAPA_REGIAO.lat}/${MAPA_REGIAO.lng}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Abrir mapa em tela cheia ↗
+              </a>
             </section>
             <aside className="space-y-2 rounded-xl border border-amber-700/50 p-5">
               <h2 className="font-medium text-amber-200">
