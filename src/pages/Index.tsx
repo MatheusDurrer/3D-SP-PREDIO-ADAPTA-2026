@@ -10,9 +10,8 @@ const Index = () => (
         Sua imersão começa na Adapta.
       </h1>
       <p className="text-slate-400 leading-relaxed">
-        Encontre o endereço do evento e abra o destino no Google Maps ou no Waze. O mapa da região
-        está em construção para ajudar você a conhecer o entorno e os bairros vizinhos antes de
-        chegar.
+        Encontre o endereço do evento, veja o mapa da região e abra o destino no Google Maps ou no
+        Waze. O preview 3D ajuda você a conhecer o entorno e os bairros vizinhos antes de chegar.
       </p>
       <nav aria-label="Explorar o projeto" className="flex flex-wrap gap-3">
         <Link
