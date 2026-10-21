@@ -3,6 +3,7 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import type { BuildingFeature, SceneData } from './types'
 import { makeTowerCandidate } from './tower'
+import { applyTowerGlass, createFacadeEnvironment } from './facade'
 import { makeNeighborReference } from './neighbor'
 import { loadGroundTexture } from './texture'
 import { loadObservedRoof } from './observedRoof'
@@ -404,9 +405,21 @@ export default function SceneCanvas({
       new THREE.LineBasicMaterial({ color: 0xf59e0b, transparent: true, opacity: 0.55 }),
     )
     group.add(pin)
+    let facadeEnvironment: THREE.WebGLRenderTarget | null = null
     let candidateTower: THREE.Group | null = null
     if (data.towerCandidate) {
       candidateTower = makeTowerCandidate(data.towerCandidate)
+      try {
+        facadeEnvironment = createFacadeEnvironment(renderer)
+        const glass = applyTowerGlass(candidateTower, facadeEnvironment.texture)
+        host.dataset.towerMaterial = glass.type
+        host.dataset.towerAppearance = 'VISUAL_APPROXIMATION_NOT_PHYSICAL_MEASURED'
+      } catch (error) {
+        facadeEnvironment?.dispose()
+        facadeEnvironment = null
+        host.dataset.towerMaterial = 'baseline-fallback'
+        console.warn('Material visual indisponível; volume preservado', error)
+      }
       group.add(candidateTower)
       host.dataset.towerCandidate = 'true'
       host.dataset.towerMeshes = String(
@@ -715,6 +728,7 @@ export default function SceneCanvas({
         else m?.dispose()
       })
       markerTex.dispose()
+      facadeEnvironment?.dispose()
       renderer.dispose()
       renderer.forceContextLoss()
       renderer.domElement.remove()
