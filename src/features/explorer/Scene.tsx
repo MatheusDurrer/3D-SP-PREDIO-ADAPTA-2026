@@ -3,6 +3,7 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import type { BuildingFeature, SceneData } from './types'
 import { makeTowerCandidate } from './tower'
+import { towerInspectionPose, type TowerSide } from './inspection'
 import { applyTowerGlass, createFacadeEnvironment } from './facade'
 import { makeNeighborReference } from './neighbor'
 import { loadGroundTexture } from './texture'
@@ -30,6 +31,7 @@ export interface SceneApi {
   setLayerVisible(k: LayerKey, v: boolean): void
   setPointSize(px: number): void
   setAutoRotate(on: boolean): void
+  inspectSide(side: TowerSide): void
   resetView(): void
   setOverview(on: boolean): void
 }
@@ -643,6 +645,28 @@ export default function SceneCanvas({
         roofMat.size = px
         contourMat.size = px * 1.7
       },
+      inspectSide: (side) => {
+        const body = candidateTower?.getObjectByName('torre_corpo')
+        if (!body) return
+        const pose = towerInspectionPose(
+          new THREE.Box3().setFromObject(body),
+          camera.aspect,
+          camera.fov,
+          side,
+        )
+        if (pose.distance > controls.maxDistance) controls.maxDistance = pose.distance * 1.05
+        camera.near = Math.max(pose.distance / 200, 0.2)
+        camera.far = Math.max(pose.distance * 12, 5000)
+        camera.updateProjectionMatrix()
+        camera.position.copy(pose.position)
+        controls.target.copy(pose.center)
+        controls.update()
+        host.dataset.viewMode = `inspection-${side}`
+        host.dataset.inspectionTarget = pose.center
+          .toArray()
+          .map((v) => v.toFixed(2))
+          .join(',')
+      },
       resetView: () => fitAdaptaFocus(false),
       setOverview: (on) => (on ? fitView(true) : fitAdaptaFocus(false)),
     }
@@ -739,8 +763,16 @@ export default function SceneCanvas({
 
   useEffect(() => {
     const onReset = () => apiRef.current?.resetView()
+    const onInspect = (event: Event) => {
+      const side = (event as CustomEvent).detail
+      if (['north', 'south', 'east', 'west'].includes(side)) apiRef.current?.inspectSide(side)
+    }
     window.addEventListener('sp3d:reset-camera', onReset)
-    return () => window.removeEventListener('sp3d:reset-camera', onReset)
+    window.addEventListener('sp3d:inspect-side', onInspect)
+    return () => {
+      window.removeEventListener('sp3d:reset-camera', onReset)
+      window.removeEventListener('sp3d:inspect-side', onInspect)
+    }
   }, [])
 
   // ---- sincronização de props -> cena -------------------------------------

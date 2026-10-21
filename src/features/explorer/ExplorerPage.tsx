@@ -288,6 +288,44 @@ export default function ExplorerPage() {
                   </button>
                 </div>
 
+                <div
+                  className="sp3d-btnrow"
+                  role="group"
+                  aria-label="Inspecionar torre por direção"
+                >
+                  {(
+                    [
+                      ['north', 'Ver do norte'],
+                      ['south', 'Ver do sul'],
+                      ['east', 'Ver do leste'],
+                      ['west', 'Ver do oeste'],
+                    ] as const
+                  ).map(([side, label]) => (
+                    <button
+                      key={side}
+                      className="sp3d-btn"
+                      onClick={() => {
+                        setAutoRotate(false)
+                        setOverview(false)
+                        setLayers((value) => ({ ...value, observedRoof: false, outline: true }))
+                        // Wait for layer/focus effects before applying the requested camera pose.
+                        window.requestAnimationFrame(() =>
+                          window.requestAnimationFrame(() => {
+                            window.dispatchEvent(
+                              new CustomEvent('sp3d:inspect-side', { detail: side }),
+                            )
+                          }),
+                        )
+                      }}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+                <p className="sp3d-prov">
+                  Direção da câmera em relação à torre; não indica a portaria. Volume simplificado,
+                  recuos e fachada ainda em revisão.
+                </p>
                 <div className="sp3d-slider">
                   <label htmlFor="sp3d-psize">Tamanho do ponto</label>
                   <input
