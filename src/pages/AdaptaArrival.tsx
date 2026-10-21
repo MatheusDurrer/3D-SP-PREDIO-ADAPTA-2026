@@ -153,13 +153,46 @@ export default function AdaptaArrival() {
                 Abrir mapa em tela cheia ↗
               </a>
             </section>
+            <section
+              aria-labelledby="arrival-recognition"
+              className="space-y-5 rounded-2xl border border-slate-700 bg-slate-900 p-5 sm:p-7"
+            >
+              <div className="space-y-2">
+                <p className="text-xs uppercase tracking-widest text-amber-300">
+                  Referências confirmadas pela organização
+                </p>
+                <h2 id="arrival-recognition" className="text-xl">
+                  Reconheça a entrada da Adapta
+                </h2>
+                <p className="text-sm leading-relaxed text-slate-300">
+                  Nas referências da entrada da torre, procure a escultura vermelha ao lado da
+                  marquise envidraçada, com estrutura clara e portas de vidro sob a cobertura.
+                </p>
+              </div>
+              <div className="space-y-2 border-t border-slate-700 pt-4">
+                <h3 className="font-medium">Acesso ao estacionamento</h3>
+                <p className="text-sm leading-relaxed text-slate-300">
+                  A entrada da garagem fica junto ao próprio prédio. É um acesso distinto da entrada
+                  de pedestres descrita acima; não utilize a referência da garagem como indicação de
+                  portaria.
+                </p>
+              </div>
+              <p className="text-xs leading-relaxed text-slate-400">
+                Referências visuais fornecidas pela organização do evento. A posição exata dos
+                acessos ainda não foi georreferenciada: o marcador do mapa continua indicando apenas
+                o edifício. Condições de estacionamento, credenciamento e acesso devem ser
+                conferidas no convite do seu evento.
+              </p>
+            </section>
             <aside className="space-y-2 rounded-xl border border-amber-700/50 p-5">
               <h2 className="font-medium text-amber-200">
-                {config.entrada_confirmada
-                  ? 'Orientações de acesso'
-                  : 'Entrada do evento a confirmar'}
+                {config.entrada_confirmada ? 'Orientações de acesso' : 'Orientação final de acesso'}
               </h2>
-              <p className="text-sm leading-relaxed text-slate-300">{config.instrucao_entrada}</p>
+              <p className="text-sm leading-relaxed text-slate-300">
+                {config.entrada_confirmada
+                  ? config.instrucao_entrada
+                  : 'A entrada da torre foi identificada pela organização nas referências visuais. O ponto exato no mapa e as instruções de credenciamento ainda estão em validação; confira o convite do seu evento.'}
+              </p>
             </aside>
             <footer className="space-y-2 text-xs leading-relaxed text-slate-400">
               <p>{config.aviso}</p>
