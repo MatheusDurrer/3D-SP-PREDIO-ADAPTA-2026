@@ -3,6 +3,7 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import type { BuildingFeature, SceneData } from './types'
 import { makeTowerCandidate } from './tower'
+import { removeSyntheticTopCap } from './roofCap'
 import { towerInspectionPose, type TowerSide } from './inspection'
 import { applyTowerGlass, createFacadeEnvironment } from './facade'
 import { makeNeighborReference } from './neighbor'
@@ -438,11 +439,13 @@ export default function SceneCanvas({
     } else host.dataset.towerCandidate = 'false'
 
     let observedRoof: THREE.Mesh | null = null
+    let integratedRoof: THREE.Mesh | null = null
     const observedRoofCtrl = new AbortController()
     const observedRoofTimer = setTimeout(() => observedRoofCtrl.abort(), 5000)
     const syncObservedRoof = () => {
       const on = host.dataset.observedRoof === 'true' && !!observedRoof
       if (observedRoof) observedRoof.visible = on
+      if (integratedRoof) integratedRoof.visible = !on && host.dataset.outline !== 'false'
       const highlighted = host.dataset.outline !== 'false'
       marker.visible = !on && highlighted
       pin.visible = !on && highlighted
@@ -460,6 +463,28 @@ export default function SceneCanvas({
         }
         observedRoof = mesh
         group.add(mesh)
+        const body = candidateTower?.getObjectByName('torre_corpo')
+        const profile = data.towerCandidate?.profiles.find((item) => item.name === 'torre_corpo')
+        if (body instanceof THREE.Mesh && profile) {
+          const removed = removeSyntheticTopCap(body, profile.top)
+          integratedRoof = new THREE.Mesh(
+            mesh.geometry.clone(),
+            new THREE.MeshStandardMaterial({
+              color: 0x76808a,
+              metalness: 0.25,
+              roughness: 0.65,
+              side: THREE.DoubleSide,
+            }),
+          )
+          integratedRoof.name = 'Telhado_integrado_observado_2020_LACUNAS_NAO_MODELADAS'
+          integratedRoof.userData = {
+            ...mesh.userData,
+            mode: 'INTEGRATED_OBSERVED_SURFACE_NOT_AS_BUILT',
+          }
+          group.add(integratedRoof)
+          host.dataset.towerTop = 'observed-2020-with-gaps'
+          host.dataset.syntheticCapRemoved = String(removed)
+        }
         host.dataset.observedRoofStatus = 'ready'
         host.dataset.observedRoofFaces = '1089'
         syncObservedRoof()
