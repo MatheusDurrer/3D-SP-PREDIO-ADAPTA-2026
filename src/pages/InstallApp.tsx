@@ -19,8 +19,8 @@ export default function InstallApp() {
           <p className="text-sm uppercase tracking-widest text-slate-300">O guia sempre com você</p>
           <h1 className="text-4xl sm:text-5xl font-semibold">Instale o guia da Adapta</h1>
           <p className="text-slate-300 leading-relaxed">
-            Adicione este site à tela inicial do seu celular. É um aplicativo web: não exige
-            download pela App Store ou Google Play.
+            Use o guia como aplicativo no celular ou computador. É um app web: não exige download
+            pela App Store ou Google Play. A instalação e a confirmação dependem do seu navegador.
           </p>
         </section>
         <section className="brand-card space-y-4 max-w-2xl" aria-labelledby="install-status-title">
@@ -33,7 +33,7 @@ export default function InstallApp() {
               : install.message ||
                 (install.available
                   ? 'Seu navegador disponibilizou a instalação direta. Toque no botão e confirme na janela que será aberta.'
-                  : 'O convite direto ainda não está disponível neste navegador. Isso não confirma se o app já está instalado. Use as instruções para iPhone ou Android abaixo.')}
+                  : 'O convite direto ainda não está disponível neste navegador. Isso não confirma se o app já está instalado. Escolha abaixo as instruções do seu sistema e navegador.')}
           </p>
           {(install.available || install.busy) && !install.standalone && (
             <button
@@ -48,10 +48,155 @@ export default function InstallApp() {
             </button>
           )}
         </section>
+        <nav aria-label="Escolher instruções de instalação" className="flex flex-wrap gap-3">
+          <a href="#install-mac-safari" className="brand-link">
+            MacBook · Safari
+          </a>
+          <a href="#install-desktop-chrome" className="brand-link">
+            Computador · Chrome
+          </a>
+          <a href="#install-firefox" className="brand-link">
+            Firefox
+          </a>
+          <a href="#install-ios" className="brand-link">
+            iPhone / iPad
+          </a>
+          <a href="#install-android" className="brand-link">
+            Android · Chrome
+          </a>
+        </nav>
         <div className="grid gap-5 md:grid-cols-2">
-          <section className="brand-card space-y-5" aria-labelledby="install-ios">
-            <p className="text-sm tracking-widest uppercase text-slate-300">iPhone · iOS</p>
-            <h2 id="install-ios" className="text-2xl font-semibold">
+          <section
+            id="install-mac-safari"
+            className="brand-card space-y-5 scroll-mt-6"
+            aria-labelledby="mac-safari-title"
+          >
+            <p className="text-sm tracking-widest uppercase text-slate-300">
+              MacBook / Mac · Safari
+            </p>
+            <h2 id="mac-safari-title" className="text-2xl font-semibold">
+              Adicionar ao Dock
+            </h2>
+            <p className="text-slate-300">
+              Requer macOS Sonoma 14 ou posterior. No Safari, esta etapa é feita pelo menu do
+              navegador — o botão do site não consegue abrir a instalação.
+            </p>
+            <ol className="list-decimal pl-5 space-y-4 leading-relaxed">
+              <li>
+                Abra a{' '}
+                <Link className="underline" to="/">
+                  página inicial do Guia Adapta
+                </Link>{' '}
+                no <strong>Safari</strong>, para que o app comece no início do guia.
+              </li>
+              <li>
+                Na barra de menus do Mac, escolha <strong>Arquivo → Adicionar ao Dock</strong>.
+                Também pode usar <strong>Compartilhar → Adicionar ao Dock</strong>.
+              </li>
+              <li>
+                Confira o nome <strong>Guia Adapta</strong> e confirme em <strong>Adicionar</strong>
+                .
+              </li>
+              <li>
+                Abra o guia pelo <strong>Dock</strong>, pelo <strong>Spotlight</strong> ou pela
+                pasta Aplicativos da sua pasta pessoal.
+              </li>
+            </ol>
+            <p className="text-sm text-slate-300">
+              Se a opção não aparecer, confira a versão do macOS ou instale pelo Chrome. Não é
+              necessário permitir notificações para instalar.
+            </p>
+            <a
+              className="underline"
+              href="https://support.apple.com/en-us/104996"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Instruções oficiais da Apple para Mac
+            </a>
+          </section>
+          <section
+            id="install-desktop-chrome"
+            className="brand-card space-y-5 scroll-mt-6"
+            aria-labelledby="desktop-chrome-title"
+          >
+            <p className="text-sm tracking-widest uppercase text-slate-300">
+              MacBook / Mac / Windows · Chrome
+            </p>
+            <h2 id="desktop-chrome-title" className="text-2xl font-semibold">
+              Instalar pelo Google Chrome
+            </h2>
+            <ol className="list-decimal pl-5 space-y-4 leading-relaxed">
+              <li>
+                Abra o guia no <strong>Google Chrome</strong>.
+              </li>
+              <li>
+                Se o botão <strong>Instalar neste dispositivo</strong> estiver disponível acima,
+                clique nele e confirme na janela do navegador.
+              </li>
+              <li>
+                Como alternativa, use o ícone de instalação na barra de endereço ou o menu{' '}
+                <strong>⋮ → Transmitir, salvar e compartilhar → Instalar página como app</strong>.
+                Os nomes podem variar com a versão.
+              </li>
+              <li>Confirme a instalação e abra o guia pelo atalho criado pelo navegador.</li>
+            </ol>
+            <p className="text-sm text-slate-300">
+              Se o convite não aparecer, isso não significa que o app esteja instalado. Verifique o
+              menu do Chrome ou continue no navegador.
+            </p>
+            <a
+              className="underline"
+              href="https://support.google.com/chrome/answer/9658361?hl=pt-BR&amp;co=GENIE.Platform%3DDesktop"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Instruções oficiais do Chrome para computador
+            </a>
+          </section>
+          <section
+            id="install-firefox"
+            className="brand-card space-y-5 scroll-mt-6"
+            aria-labelledby="firefox-title"
+          >
+            <p className="text-sm tracking-widest uppercase text-slate-300">Mozilla Firefox</p>
+            <h2 id="firefox-title" className="text-2xl font-semibold">
+              Instalação conforme o sistema
+            </h2>
+            <p className="leading-relaxed">
+              <strong>No Windows:</strong> em versões compatíveis, clique no botão de apps da Web na
+              barra de endereço do próprio Firefox. Ele cria o aplicativo e um atalho no menu
+              Iniciar. O botão deste site não pode abrir esse comando do Firefox.
+            </p>
+            <p className="text-slate-300">
+              A Mozilla documenta esse recurso no Firefox 143 ou posterior; para instalações pela
+              Microsoft Store, no Firefox 150 ou posterior. A disponibilidade depende da versão e da
+              distribuição.
+            </p>
+            <p className="leading-relaxed">
+              <strong>No Mac:</strong> a Mozilla não oferece esse mesmo recurso documentado para
+              Windows. Para instalar o Guia Adapta, abra o endereço no Safari ou Chrome e siga as
+              instruções correspondentes. Você pode continuar usando o guia normalmente no Firefox.
+            </p>
+            <a href="#install-mac-safari" className="brand-link">
+              Ver como instalar no Mac
+            </a>
+            <p>
+              <a
+                className="underline"
+                href="https://support.mozilla.org/en-US/kb/web-apps-firefox-windows"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Compatibilidade oficial do Firefox
+              </a>
+            </p>
+          </section>
+          <section className="brand-card space-y-5 scroll-mt-6" aria-labelledby="install-ios">
+            <p className="text-sm tracking-widest uppercase text-slate-300">
+              iPhone / iPad · Safari
+            </p>
+            <h2 id="install-ios" className="text-2xl font-semibold scroll-mt-6">
               Adicionar pelo Safari
             </h2>
             <ol className="list-decimal pl-5 space-y-4 leading-relaxed">
@@ -74,7 +219,7 @@ export default function InstallApp() {
           </section>
           <section className="brand-card space-y-5" aria-labelledby="install-android">
             <p className="text-sm tracking-widest uppercase text-slate-300">Celular · Android</p>
-            <h2 id="install-android" className="text-2xl font-semibold">
+            <h2 id="install-android" className="text-2xl font-semibold scroll-mt-6">
               Adicionar pelo Chrome
             </h2>
             <ol className="list-decimal pl-5 space-y-4 leading-relaxed">
