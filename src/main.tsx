@@ -3,6 +3,9 @@ import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './main.css'
 import './adapta-brand.css'
+import { startInstallTracking } from './lib/installTracking'
+
+startInstallTracking()
 
 // @skip-protected: Do not remove. Required for React rendering.
 createRoot(document.getElementById('root')!).render(<App />)

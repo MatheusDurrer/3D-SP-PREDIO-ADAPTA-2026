@@ -1,6 +1,9 @@
+import { useSyncExternalStore } from 'react'
 import { Link } from 'react-router-dom'
+import { getInstallState, subscribeInstall, requestInstall } from '@/lib/installTracking'
 
 export default function InstallApp() {
+  const install = useSyncExternalStore(subscribeInstall, getInstallState)
   return (
     <main className="brand-page">
       <div className="brand-wrap space-y-8">
@@ -19,6 +22,31 @@ export default function InstallApp() {
             Adicione este site à tela inicial do seu celular. É um aplicativo web: não exige
             download pela App Store ou Google Play.
           </p>
+        </section>
+        <section className="brand-card space-y-4 max-w-2xl" aria-labelledby="install-status-title">
+          <h2 id="install-status-title" className="text-2xl font-semibold">
+            {install.standalone ? 'Você já está no app' : 'Instalação neste navegador'}
+          </h2>
+          <p role="status" aria-live="polite" className="text-slate-300 leading-relaxed">
+            {install.standalone
+              ? 'O guia está aberto em modo aplicativo. Continue para as orientações de chegada ou explore a região.'
+              : install.message ||
+                (install.available
+                  ? 'Seu navegador disponibilizou a instalação direta. Toque no botão e confirme na janela que será aberta.'
+                  : 'O convite direto ainda não está disponível neste navegador. Isso não confirma se o app já está instalado. Use as instruções para iPhone ou Android abaixo.')}
+          </p>
+          {(install.available || install.busy) && !install.standalone && (
+            <button
+              type="button"
+              className="brand-link brand-install disabled:opacity-60"
+              disabled={install.busy}
+              onClick={() => {
+                void requestInstall()
+              }}
+            >
+              {install.busy ? 'Aguardando navegador…' : 'Instalar neste dispositivo'}
+            </button>
+          )}
         </section>
         <div className="grid gap-5 md:grid-cols-2">
           <section className="brand-card space-y-5" aria-labelledby="install-ios">
