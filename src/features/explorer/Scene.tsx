@@ -412,6 +412,12 @@ export default function SceneCanvas({
       host.dataset.towerMeshes = String(
         candidateTower.children.filter((child) => child instanceof THREE.Mesh).length,
       )
+      let proceduralLineObjects = 0
+      candidateTower.traverse((object) => {
+        if (object instanceof THREE.LineSegments) proceduralLineObjects += 1
+      })
+      host.dataset.towerProceduralLines = String(proceduralLineObjects)
+      host.dataset.towerFacade = 'UNSURVEYED_NO_PROCEDURAL_FLOORS'
       host.dataset.inferredProfiles = '2'
       host.dataset.inferred = 'false'
     } else host.dataset.towerCandidate = 'false'

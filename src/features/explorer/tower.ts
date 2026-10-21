@@ -53,29 +53,8 @@ export function makeTowerCandidate(data: TowerCandidate): THREE.Group {
     }
     if (index === 0) group.add(mesh)
     else inferred.add(mesh)
-    if (index === 0) {
-      const positions: number[] = []
-      for (
-        let y = profile.base + data.bands.spacing_m;
-        y < profile.top - data.bands.thickness_m;
-        y += data.bands.spacing_m
-      ) {
-        for (let i = 0; i < profile.ring.length; i++) {
-          const a = profile.ring[i],
-            b = profile.ring[(i + 1) % profile.ring.length]
-          positions.push(a[0], y, a[1], b[0], y, b[1])
-        }
-      }
-      const joints = new THREE.LineSegments(
-        new THREE.BufferGeometry().setAttribute(
-          'position',
-          new THREE.Float32BufferAttribute(positions, 3),
-        ),
-        new THREE.LineBasicMaterial({ color: 0xc7ced4, transparent: true, opacity: 0.72 }),
-      )
-      joints.name = 'juntas_procedurais_nao_levantadas'
-      group.add(joints)
-    }
+    // No procedural floor lines: spacing is not a surveyed facade measurement.
+    // Historical candidate volume only; current facade and setbacks remain unverified.
   })
   return group
 }
