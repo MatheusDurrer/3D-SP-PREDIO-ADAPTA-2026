@@ -17,7 +17,7 @@ const Index = () => (
       <nav aria-label="Explorar o projeto" className="flex flex-wrap gap-3">
         <Link
           to="/adapta"
-          className="inline-flex min-h-12 items-center rounded-xl bg-amber-300 px-5 py-3 font-medium text-slate-950"
+          className="inline-flex min-h-12 items-center rounded-xl bg-slate-600 px-5 py-3 font-medium text-white"
         >
           Como chegar à Adapta
         </Link>
