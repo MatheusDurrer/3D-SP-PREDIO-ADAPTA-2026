@@ -51,6 +51,7 @@ export default function ExplorerPage() {
     westRoof: false,
   })
   const [overview, setOverview] = useState(false)
+  const [inspection, setInspection] = useState<{ side: string; request: number } | null>(null)
   // Padrão: sem rotação automática (respeita reduced-motion por padrão; controle claro na UI).
   const [autoRotate, setAutoRotate] = useState(false)
   // Painel: aberto no desktop, recolhido (drawer) por padrão no mobile.
@@ -92,6 +93,11 @@ export default function ExplorerPage() {
   const onCanvasPointerDown = (event: React.PointerEvent) => {
     if (event.target instanceof HTMLCanvasElement) setAutoRotate(false)
   }
+
+  useEffect(() => {
+    if (inspection)
+      window.dispatchEvent(new CustomEvent('sp3d:inspect-side', { detail: inspection.side }))
+  }, [inspection])
 
   const toggleLayer = (k: LayerKey) => setLayers((s) => ({ ...s, [k]: !s[k] }))
 
@@ -308,14 +314,7 @@ export default function ExplorerPage() {
                         setAutoRotate(false)
                         setOverview(false)
                         setLayers((value) => ({ ...value, observedRoof: false, outline: true }))
-                        // Wait for layer/focus effects before applying the requested camera pose.
-                        window.requestAnimationFrame(() =>
-                          window.requestAnimationFrame(() => {
-                            window.dispatchEvent(
-                              new CustomEvent('sp3d:inspect-side', { detail: side }),
-                            )
-                          }),
-                        )
+                        setInspection((value) => ({ side, request: (value?.request ?? 0) + 1 }))
                       }}
                     >
                       {label}
