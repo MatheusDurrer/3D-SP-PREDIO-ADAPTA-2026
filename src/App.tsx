@@ -9,6 +9,7 @@ import AdaptaArrival from './pages/AdaptaArrival'
 import NotFound from './pages/NotFound'
 import PublicInventory from './pages/PublicInventory'
 import InstallApp from './pages/InstallApp'
+import InteriorGuide from './pages/InteriorGuide'
 import Layout from './components/Layout'
 import { RequireAdmin } from '@/components/admin/RequireAdmin'
 import AdminLayout from '@/components/admin/AdminLayout'
@@ -74,6 +75,7 @@ const App = () => (
 
         <Route path="/adapta" element={<AdaptaArrival />} />
         <Route path="/instalar" element={<InstallApp />} />
+        <Route path="/interior" element={<InteriorGuide />} />
         <Route path="/empreendimentos" element={<PublicInventory />} />
         <Route
           path="/explorar"

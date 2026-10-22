@@ -68,6 +68,9 @@ export default function AdaptaArrival() {
           Amostra de dados reais, sem validação externa de precisão. Não substitui as orientações de
           chegada.
         </p>
+        <Link to="/interior" className={button}>
+          Conhecer o interior · fotos reais
+        </Link>
         {error ? (
           <section role="alert" className="space-y-4 rounded-xl border border-red-900 p-5">
             <p>{error}</p>
