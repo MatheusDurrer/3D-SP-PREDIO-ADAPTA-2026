@@ -27,9 +27,7 @@ const Index = () => (
         >
           Explorar modelo 3D
         </Link>
-        <Link to="/interior" className="brand-link">
-          Conhecer o interior · fotos reais
-        </Link>
+
         <Link to="/instalar" className="brand-link brand-install">
           Instalar aplicativo ↗
         </Link>
@@ -38,9 +36,9 @@ const Index = () => (
       <aside className="border border-slate-700 rounded-xl p-5 text-sm leading-relaxed">
         <h2 className="text-slate-100 font-medium mb-2">Explore antes de chegar</h2>
         <p>
-          O preview mostra uma amostra histórica do entorno, não um mapa atual concluído. O guia
-          fotográfico já apresenta referências reais do interior no 32º andar; não é um tour 360°.
-          Os restaurantes para almoço serão destacados após a seleção da organização.
+          O preview mostra uma amostra histórica do entorno, não um mapa atual concluído. O tour
+          360° do escritório será integrado a partir do material produzido pela organização. Os
+          restaurantes para almoço serão destacados após a seleção da organização.
         </p>
       </aside>
       <p className="text-xs text-slate-500">
