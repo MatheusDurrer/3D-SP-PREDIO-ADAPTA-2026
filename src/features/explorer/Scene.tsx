@@ -466,8 +466,7 @@ export default function SceneCanvas({
         const body = candidateTower?.getObjectByName('torre_corpo')
         const profile = data.towerCandidate?.profiles.find((item) => item.name === 'torre_corpo')
         if (body instanceof THREE.Mesh && profile) {
-          const removed = removeSyntheticTopCap(body, profile.top)
-          integratedRoof = new THREE.Mesh(
+          const replacement = new THREE.Mesh(
             mesh.geometry.clone(),
             new THREE.MeshStandardMaterial({
               color: 0x76808a,
@@ -476,11 +475,20 @@ export default function SceneCanvas({
               side: THREE.DoubleSide,
             }),
           )
-          integratedRoof.name = 'Telhado_integrado_observado_2020_LACUNAS_NAO_MODELADAS'
-          integratedRoof.userData = {
+          replacement.name = 'Telhado_integrado_observado_2020_LACUNAS_NAO_MODELADAS'
+          replacement.userData = {
             ...mesh.userData,
             mode: 'INTEGRATED_OBSERVED_SURFACE_NOT_AS_BUILT',
           }
+          let removed: number
+          try {
+            removed = removeSyntheticTopCap(body, profile.top, replacement.geometry)
+          } catch (error) {
+            replacement.geometry.dispose()
+            ;(replacement.material as THREE.Material).dispose()
+            throw error
+          }
+          integratedRoof = replacement
           group.add(integratedRoof)
           host.dataset.towerTop = 'observed-2020-with-gaps'
           host.dataset.syntheticCapRemoved = String(removed)
