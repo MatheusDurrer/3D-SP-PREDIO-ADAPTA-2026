@@ -554,7 +554,9 @@ export default function SceneCanvas({
         group.add(loaded)
         loaded.visible = host.dataset.marquise === 'true'
         host.dataset.marquiseStatus = 'ready'
-        host.dataset.marquiseFaces = '232'
+        host.dataset.marquiseFaces = String(loaded.userData.faces)
+        host.dataset.marquiseSourceFaces = String(loaded.userData.sourceFaces)
+        host.dataset.marquiseDiscardedFaces = String(loaded.userData.discardedDegenerateFaces)
         window.dispatchEvent(new CustomEvent('sp3d-marquise-status', { detail: 'ready' }))
       })
       .catch((error) => {

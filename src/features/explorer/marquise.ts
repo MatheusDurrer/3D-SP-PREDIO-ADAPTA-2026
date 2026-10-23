@@ -40,12 +40,9 @@ export async function loadMarquise(signal: AbortSignal): Promise<THREE.Group> {
     indices[i] = view.getUint16(offset, true)
     if (indices[i] >= nV) throw new Error('Indice invalido')
   }
-  const geometry = new THREE.BufferGeometry()
-  geometry.setAttribute('position', new THREE.BufferAttribute(pos, 3))
-  geometry.setIndex(new THREE.BufferAttribute(indices, 1))
-  geometry.computeVertexNormals()
-
   const group = new THREE.Group()
+  let renderedFaces = 0
+  let discardedDegenerateFaces = 0
   group.name = 'Marquise_entrada_APROXIMACAO_VISUAL_NAO_METRICA'
 
   // Cobertura transparente = primeiros 20 vértices (8 da cobertura + 12 das colunas/escada são opacos)
@@ -61,13 +58,30 @@ export async function loadMarquise(signal: AbortSignal): Promise<THREE.Group> {
     name: string,
   ) => {
     const idx: number[] = []
+    const a = new THREE.Vector3()
+    const b = new THREE.Vector3()
+    const c = new THREE.Vector3()
     for (let f = startFace; f < startFace + countFace; f++) {
-      idx.push(indices[3 * f], indices[3 * f + 1], indices[3 * f + 2])
+      const ia = indices[3 * f],
+        ib = indices[3 * f + 1],
+        ic = indices[3 * f + 2]
+      a.fromArray(pos, ia * 3)
+      b.fromArray(pos, ib * 3).sub(a)
+      c.fromArray(pos, ic * 3).sub(a)
+      if (b.cross(c).lengthSq() <= 1e-12) {
+        discardedDegenerateFaces++
+        continue
+      }
+      idx.push(ia, ib, ic)
     }
-    const geo = new THREE.BufferGeometry()
-    geo.setAttribute('position', new THREE.BufferAttribute(pos.slice(), 3))
-    geo.setIndex(idx)
+    const indexed = new THREE.BufferGeometry()
+    indexed.setAttribute('position', new THREE.BufferAttribute(pos.slice(), 3))
+    indexed.setIndex(idx)
+    // Independent triangle vertices retain hard architectural edges. No spatial changes.
+    const geo = indexed.toNonIndexed()
+    indexed.dispose()
     geo.computeVertexNormals()
+    renderedFaces += idx.length / 3
     const mesh = new THREE.Mesh(geo, material)
     mesh.name = name
     return mesh
@@ -111,7 +125,9 @@ export async function loadMarquise(signal: AbortSignal): Promise<THREE.Group> {
     epoch: 'SV2024+fotos_proprietarias',
     metric: false,
     vertices: nV,
-    faces: nF,
+    sourceFaces: nF,
+    faces: renderedFaces,
+    discardedDegenerateFaces,
   }
   group.visible = false
   return group
