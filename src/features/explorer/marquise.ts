@@ -10,7 +10,7 @@ import { sha256Hex } from './ground'
 // SHA-256 verificado no cliente antes de usar.
 
 const MARQUISE_URL = '/scene/marquise-v1.b64'
-const EXPECTED_SHA256 = 'bf833bbb8e034c7dca822e3fa146feec65e8b10c89ff56cd6449ef1781df1d30'
+const EXPECTED_SHA256 = '6b2abcdcfe366d2f0db6feb81bd855d82a6d55e6806ef0f81a0678d2951aafa6'
 const EXPECTED_NV = 160
 const EXPECTED_NF = 232
 
