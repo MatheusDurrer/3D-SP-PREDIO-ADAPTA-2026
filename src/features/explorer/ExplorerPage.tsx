@@ -13,6 +13,7 @@ const LAYER_LABELS: Record<LayerKey, string> = {
   neighbor: 'Vizinho SSE · LiDAR 2020 aproximado',
   observedRoof: 'Comparar telhado medido · 2020',
   westRoof: 'Telhado oeste observado · 2020',
+  marquise: 'Marquise/entrada · aproximação visual',
 }
 
 export default function ExplorerPage() {
@@ -49,6 +50,7 @@ export default function ExplorerPage() {
     neighbor: false,
     observedRoof: false,
     westRoof: false,
+    marquise: false,
   })
   const [overview, setOverview] = useState(false)
   const [inspection, setInspection] = useState<{ side: string; request: number } | null>(null)
@@ -178,6 +180,12 @@ export default function ExplorerPage() {
             <span className="sp3d-hud-density" data-testid="observed-roof-status">
               Comparacao de superficie LiDAR 2020 · azul=baixo, laranja=alto · sem paredes ou recuos
               inferidos; se indisponivel, torre candidata preservada
+            </span>
+          )}
+          {layers.marquise && (
+            <span className="sp3d-hud-density" data-testid="marquise-status">
+              Marquise/entrada: aproximação visual (SV Fev 2024 + fotos proprietárias) · NÃO métrica
+              · posição por face oeste medida
             </span>
           )}
           {phase.kind === 'ready' && layers.neighbor && (

@@ -10,6 +10,7 @@ import { makeNeighborReference } from './neighbor'
 import { loadGroundTexture } from './texture'
 import { loadObservedRoof } from './observedRoof'
 import { loadWestRoof } from './westRoof'
+import { loadMarquise } from './marquise'
 import {
   decodeGroundMesh,
   EXPECTED_GROUND_SHA256,
@@ -27,6 +28,7 @@ export type LayerKey =
   | 'neighbor'
   | 'observedRoof'
   | 'westRoof'
+  | 'marquise'
 
 export interface SceneApi {
   setLayerVisible(k: LayerKey, v: boolean): void
@@ -530,6 +532,39 @@ export default function SceneCanvas({
       })
       .finally(() => clearTimeout(westTimer))
 
+    // MOD-ENTRANCE-MARQUISE-V1: aproximação visual da marquise/entrada (face oeste),
+    // corroborada por SV Fev 2024 + fotos do proprietário. NÃO métrica; camada OFF por padrão.
+    let marquiseGroup: THREE.Group | null = null
+    const marquiseCtrl = new AbortController()
+    const marquiseTimer = setTimeout(() => marquiseCtrl.abort(), 5000)
+    host.dataset.marquise = 'false'
+    host.dataset.marquiseStatus = 'loading'
+    loadMarquise(marquiseCtrl.signal)
+      .then((loaded) => {
+        if (sceneDisposed) {
+          loaded.traverse((object) => {
+            if (object instanceof THREE.Mesh) {
+              object.geometry.dispose()
+              ;(object.material as THREE.Material).dispose()
+            }
+          })
+          return
+        }
+        marquiseGroup = loaded
+        group.add(loaded)
+        loaded.visible = host.dataset.marquise === 'true'
+        host.dataset.marquiseStatus = 'ready'
+        host.dataset.marquiseFaces = '232'
+        window.dispatchEvent(new CustomEvent('sp3d-marquise-status', { detail: 'ready' }))
+      })
+      .catch((error) => {
+        if (!sceneDisposed) {
+          host.dataset.marquiseStatus = `unavailable: ${error instanceof Error ? error.message : String(error)}`
+          window.dispatchEvent(new CustomEvent('sp3d-marquise-status', { detail: 'unavailable' }))
+        }
+      })
+      .finally(() => clearTimeout(marquiseTimer))
+
     const neighborGroup = data.neighborReference
       ? makeNeighborReference(data.neighborReference)
       : null
@@ -659,6 +694,7 @@ export default function SceneCanvas({
           } else if (!v) fitAdaptaFocus(false)
         }
         if (k === 'westRoof' && westRoof) westRoof.visible = v
+        if (k === 'marquise' && marquiseGroup) marquiseGroup.visible = v
         if (k === 'neighbor' && neighborGroup) neighborGroup.visible = v
         if (k === 'buildings') bGroup.visible = v
         if (k === 'inferred' && candidateTower) {
@@ -773,6 +809,8 @@ export default function SceneCanvas({
       clearTimeout(observedRoofTimer)
       westCtrl.abort()
       clearTimeout(westTimer)
+      marquiseCtrl.abort()
+      clearTimeout(marquiseTimer)
       appliedTexture?.dispose()
       cancelAnimationFrame(raf)
       ro.disconnect()
