@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import { sha256Hex } from './ground'
+import { makeCanopyFrame } from './canopyFrame'
 
 // MOD-ENTRANCE-MARQUISE-V1 — marquise/entrada da face oeste (aproximação visual NÃO MÉTRICA).
 // Fontes: Street View Fev 2024 (pano yQe1m1csIK-a4Sgn029Bcw, yaw105/−30) + fotos do Tony
@@ -119,14 +120,17 @@ export async function loadMarquise(signal: AbortSignal): Promise<THREE.Group> {
     new THREE.MeshStandardMaterial({ color: 0xd8dad6, roughness: 0.6, metalness: 0.1 }),
     'Marquise_guarda_corpos',
   )
-  group.add(canopy, columns, stairs, rails)
+  const frame = makeCanopyFrame(pos)
+  group.add(canopy, columns, stairs, rails, frame)
   group.userData = {
     status: 'APROXIMACAO_VISUAL_NAO_METRICA',
     epoch: 'SV2024+fotos_proprietarias',
     metric: false,
     vertices: nV,
     sourceFaces: nF,
-    faces: renderedFaces,
+    faces: renderedFaces + Number(frame.userData.faces),
+    baseFaces: renderedFaces,
+    framingMembers: frame.children.length,
     discardedDegenerateFaces,
   }
   group.visible = false
