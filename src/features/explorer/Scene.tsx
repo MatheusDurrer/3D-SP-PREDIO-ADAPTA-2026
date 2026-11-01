@@ -5,7 +5,7 @@ import type { BuildingFeature, SceneData } from './types'
 import { makeTowerCandidate } from './tower'
 import { removeSyntheticTopCap } from './roofCap'
 import { towerInspectionPose, type TowerSide } from './inspection'
-import { applyTowerGlass, createFacadeEnvironment } from './facade'
+import { applyTowerGlass, applyRearGlassTint, createFacadeEnvironment } from './facade'
 import { makeNeighborReference } from './neighbor'
 import { loadGroundTexture } from './texture'
 import { loadObservedRoof } from './observedRoof'
@@ -417,6 +417,8 @@ export default function SceneCanvas({
       try {
         facadeEnvironment = createFacadeEnvironment(renderer)
         const glass = applyTowerGlass(candidateTower, facadeEnvironment.texture)
+        applyRearGlassTint(glass)
+        host.dataset.towerRearFacade = 'R24_MATERIAL_ONLY_EAST_HYPOTHESIS'
         host.dataset.towerMaterial = glass.type
         host.dataset.towerAppearance = 'VISUAL_APPROXIMATION_NOT_PHYSICAL_MEASURED'
       } catch (error) {
