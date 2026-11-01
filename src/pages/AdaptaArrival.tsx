@@ -1,19 +1,30 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import {
-  loadArrival,
-  directionsUrl,
-  wazeUrl,
-  MAPA_REGIAO,
-  type ArrivalConfig,
-} from '@/services/arrival'
+import { loadArrival, directionsUrl, wazeUrl, type ArrivalConfig } from '@/services/arrival'
+import LunchMap, { loadLunchData, type LunchData } from '@/components/LunchMap'
 
 export default function AdaptaArrival() {
   const [config, setConfig] = useState<ArrivalConfig | null>(null)
   const [error, setError] = useState('')
   const [attempt, setAttempt] = useState(0)
   const [copyMessage, setCopyMessage] = useState('')
+  const [lunchData, setLunchData] = useState<LunchData | null>(null)
+  const [lunchError, setLunchError] = useState('')
+  const [selectedSpot, setSelectedSpot] = useState<string | null>('blenz')
   const addressRef = useRef<HTMLTextAreaElement>(null)
+  useEffect(() => {
+    let active = true
+    loadLunchData()
+      .then((value) => {
+        if (active) setLunchData(value)
+      })
+      .catch(() => {
+        if (active) setLunchError('Não foi possível carregar o mapa de restaurantes.')
+      })
+    return () => {
+      active = false
+    }
+  }, [])
   useEffect(() => {
     let active = true
     setError('')
@@ -134,29 +145,116 @@ export default function AdaptaArrival() {
                 do evento.
               </p>
             </section>
-            <section className="space-y-3 rounded-2xl border border-slate-700 bg-slate-900 p-5 sm:p-7">
-              <h2 className="text-xl">A região</h2>
-              <p className="text-sm text-slate-400">
-                Localização do edifício no mapa da região (Berrini / Vila Olímpia).
-              </p>
-              <iframe
-                title="Mapa da região do evento · OpenStreetMap"
-                src={`https://www.openstreetmap.org/export/embed.html?bbox=${MAPA_REGIAO.bbox}&layer=mapnik&marker=${MAPA_REGIAO.lat},${MAPA_REGIAO.lng}`}
-                loading="lazy"
-                className="h-72 w-full rounded-lg border border-slate-700 sm:h-80"
-              />
+            <section
+              aria-labelledby="arrival-region"
+              className="space-y-4 rounded-2xl border border-slate-700 bg-slate-900 p-5 sm:p-7"
+            >
+              <div className="space-y-2">
+                <p className="text-xs uppercase tracking-widest text-amber-300">
+                  Onde almoçar · destaques no mapa
+                </p>
+                <h2 id="arrival-region" className="text-xl">
+                  A região em mapa interativo
+                </h2>
+                <p className="text-sm leading-relaxed text-slate-400">
+                  O prédio da Adapta (Berrini One) está destacado em âmbar — contorno medido por
+                  LiDAR. Os pins mostram as opções de almoço escolhidas pela organização; toque em
+                  um pin ou na lista para ver os detalhes.
+                </p>
+              </div>
+              {lunchError ? (
+                <p role="alert" className="text-sm text-red-300">
+                  {lunchError}
+                </p>
+              ) : !lunchData ? (
+                <p role="status" className="text-sm text-slate-400">
+                  Carregando mapa e restaurantes…
+                </p>
+              ) : (
+                <>
+                  <LunchMap data={lunchData} selectedId={selectedSpot} onSelect={setSelectedSpot} />
+                  <div className="space-y-2">
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      {lunchData.spots.map((spot) => (
+                        <button
+                          key={spot.id}
+                          className={`rounded-lg border p-3 text-left transition-colors ${
+                            selectedSpot === spot.id
+                              ? 'border-amber-400 bg-amber-400/10'
+                              : 'border-slate-600 hover:bg-slate-800'
+                          }`}
+                          onClick={() => setSelectedSpot(spot.id)}
+                        >
+                          <span
+                            className={`block text-sm font-medium ${
+                              spot.destaque ? 'text-amber-300' : 'text-slate-100'
+                            }`}
+                          >
+                            {spot.destaque ? '★ ' : ''}
+                            {spot.nome}
+                          </span>
+                          <span className="block text-xs text-slate-400">{spot.tipo}</span>
+                        </button>
+                      ))}
+                    </div>
+                    {selectedSpot && (
+                      <div className="rounded-xl border border-slate-600 bg-slate-950 p-4">
+                        {(() => {
+                          const spot = lunchData.spots.find((s) => s.id === selectedSpot)!
+                          return (
+                            <div className="space-y-2">
+                              <h3 className="font-medium text-slate-100">
+                                {spot.destaque ? '★ ' : ''}
+                                {spot.nome}
+                              </h3>
+                              <p className="text-sm text-slate-300">{spot.endereco}</p>
+                              <p className="text-xs text-slate-400">
+                                {spot.tipo} · {spot.horario}
+                              </p>
+                              <div className="flex flex-wrap gap-2 pt-1">
+                                <a
+                                  className={button}
+                                  href={spot.links.site}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  Site oficial ↗
+                                </a>
+                                {spot.links.instagram && (
+                                  <a
+                                    className={button}
+                                    href={spot.links.instagram}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    Instagram ↗
+                                  </a>
+                                )}
+                                <a
+                                  className={button}
+                                  href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+                                    spot.endereco + ', São Paulo - SP',
+                                  )}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  Rota no Google Maps ↗
+                                </a>
+                              </div>
+                            </div>
+                          )
+                        })()}
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
               <p className="text-xs leading-relaxed text-slate-400">
-                Mapa © OpenStreetMap contributors (ODbL). O marcador indica o edifício, não a
-                portaria de entrada do evento.
+                Mapa © OpenStreetMap contributors (ODbL). O contorno do prédio é uma amostra medida
+                (LiDAR 2020, candidato não validado externamente) — não indica portaria de entrada.
+                Horários podem variar; confirme no dia do seu evento. Os destaques são sugestões da
+                organização, não serviços do evento.
               </p>
-              <a
-                className={button}
-                href={`https://www.openstreetmap.org/?mlat=${MAPA_REGIAO.lat}&mlon=${MAPA_REGIAO.lng}#map=17/${MAPA_REGIAO.lat}/${MAPA_REGIAO.lng}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Abrir mapa em tela cheia ↗
-              </a>
             </section>
             <section
               aria-labelledby="arrival-recognition"

@@ -288,3 +288,21 @@
     animation: spotlight 2s ease forwards;
   }
 }
+
+/* Lunch map pins (MapLibre custom markers) */
+.sp3d-pin {
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  background: #94a3b8;
+  border: 2px solid #0f172a;
+  cursor: pointer;
+  padding: 0;
+}
+.sp3d-pin-featured {
+  width: 20px;
+  height: 20px;
+  background: #f59e0b;
+  border: 3px solid #fff7ed;
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.35);
+}

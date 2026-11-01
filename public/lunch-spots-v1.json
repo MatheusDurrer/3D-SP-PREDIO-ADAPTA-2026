@@ -1,0 +1,166 @@
+{
+  "schema": "sp3d_lunch_spots/1",
+  "generated": "2026-10-31",
+  "attribution_note": "Pins geocodificados via Nominatim/OSM (ODbL) ou coordenada publicada pela fonte; footprint Adapta = contorno LiDAR 2020 (dataset proprio, candidato NAO validado externamente)",
+  "adapta_footprint": {
+    "type": "Feature",
+    "properties": {
+      "identity": "ADAPTA_BERRINI_ONE_NORTH",
+      "floors": "31-32",
+      "status": "CANDIDATE_FROM_ROOF_CELLS_NOT_APPROVED_FOOTPRINT",
+      "epoch": "LiDAR 2020",
+      "note": "outline highlight only, no height"
+    },
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [-46.6906295, -23.597849],
+          [-46.6906691, -23.5978757],
+          [-46.6906693, -23.5978937],
+          [-46.690709, -23.5979294],
+          [-46.6906994, -23.5979476],
+          [-46.6906798, -23.5979478],
+          [-46.6906703, -23.597975],
+          [-46.6906508, -23.5979752],
+          [-46.6906315, -23.5980025],
+          [-46.6906119, -23.5980027],
+          [-46.6905732, -23.5980392],
+          [-46.6905536, -23.5980394],
+          [-46.6905537, -23.5980485],
+          [-46.6905341, -23.5980487],
+          [-46.6905342, -23.5980577],
+          [-46.6905146, -23.5980579],
+          [-46.6905148, -23.598067],
+          [-46.6904952, -23.5980672],
+          [-46.6904953, -23.5980762],
+          [-46.6904757, -23.5980764],
+          [-46.6904563, -23.5980947],
+          [-46.6904269, -23.598095],
+          [-46.690427, -23.598104],
+          [-46.6903976, -23.5981044],
+          [-46.6903978, -23.5981134],
+          [-46.6903684, -23.5981137],
+          [-46.6903685, -23.5981227],
+          [-46.6903391, -23.5981231],
+          [-46.6903392, -23.5981321],
+          [-46.6902902, -23.5981326],
+          [-46.6902796, -23.5980695],
+          [-46.6902698, -23.5980696],
+          [-46.6902592, -23.5980065],
+          [-46.6902494, -23.5980066],
+          [-46.690249, -23.5979705],
+          [-46.6902974, -23.5979248],
+          [-46.690317, -23.5979246],
+          [-46.6903265, -23.5979065],
+          [-46.6903851, -23.5978878],
+          [-46.6903946, -23.5978696],
+          [-46.6904435, -23.59786],
+          [-46.6904531, -23.5978419],
+          [-46.6904825, -23.5978416],
+          [-46.6904823, -23.5978325],
+          [-46.6905312, -23.597823],
+          [-46.6905311, -23.5978139],
+          [-46.6905801, -23.5978134],
+          [-46.69058, -23.5978044],
+          [-46.6905996, -23.5978042],
+          [-46.6906293, -23.5978309],
+          [-46.6906295, -23.597849]
+        ]
+      ]
+    }
+  },
+  "spots": [
+    {
+      "id": "blenz",
+      "nome": "Blenz Café",
+      "destaque": true,
+      "endereco": "Av. Eng. Luís Carlos Berrini, 105 — Loja 8, térreo (One Berrini Corporate)",
+      "horario": "Seg–Sex 7h–18h",
+      "tipo": "Café / lanches / almoço",
+      "coords": [-46.6904833, -23.5979777],
+      "coords_note": "no próprio edifício — centro do footprint medido",
+      "links": {
+        "site": "https://blenzcafe.com.br/lojas",
+        "instagram": "https://www.instagram.com/blenz_cafe/"
+      }
+    },
+    {
+      "id": "divinos",
+      "nome": "Divinos Brooklin",
+      "destaque": false,
+      "endereco": "Rua Joel Carlos Borges, 120",
+      "horario": "Seg–Sáb, almoço e happy hour",
+      "tipo": "Buffet por quilo + à la carte",
+      "coords": [-46.695739, -23.6054679],
+      "coords_note": "Nominatim",
+      "links": { "site": "https://www.yoobite.com/br/local/divinos-brooklin/" }
+    },
+    {
+      "id": "savana",
+      "nome": "Savana Restaurante",
+      "destaque": false,
+      "endereco": "Rua Arandu, 149",
+      "horario": "Seg–Sáb, almoço e jantar",
+      "tipo": "Self service / à la carte",
+      "coords": [-46.6935059, -23.6104928],
+      "coords_note": "coordenada publicada pela fonte (Espaces), confirmada por reverse-geocode na Rua Arandu",
+      "links": { "site": "https://espaces.com.br/savana" }
+    },
+    {
+      "id": "cheiro",
+      "nome": "Cheiro Verde Grill",
+      "destaque": false,
+      "endereco": "Av. Eng. Luís Carlos Berrini, 1699",
+      "horario": "Seg–Sex, almoço",
+      "tipo": "Comida por quilo",
+      "coords": [-46.6949804, -23.6116949],
+      "coords_note": "Nominatim",
+      "links": { "site": "https://www.encontrabrooklin.com.br/r/restaurantes-no-brooklin.shtml" }
+    },
+    {
+      "id": "flor",
+      "nome": "Flor do Manjericão",
+      "destaque": false,
+      "endereco": "Rua Flórida, 1236",
+      "horario": "Seg–Sáb, almoço",
+      "tipo": "Culinária brasileira",
+      "coords": [-46.6903548, -23.6099699],
+      "coords_note": "Nominatim",
+      "links": { "site": "https://www.encontrabrooklin.com.br/r/restaurantes-no-brooklin.shtml" }
+    },
+    {
+      "id": "barakah",
+      "nome": "Barakah Cozinha Árabe",
+      "destaque": false,
+      "endereco": "Av. Eng. Luís Carlos Berrini, 1458",
+      "horario": "Seg–Sex 11h30–15h",
+      "tipo": "Buffet árabe self service",
+      "coords": [-46.6947607, -23.6093269],
+      "coords_note": "Nominatim",
+      "links": { "site": "https://barakah.net.br/" }
+    },
+    {
+      "id": "tulsi",
+      "nome": "Tulsi Indian Cuisine",
+      "destaque": false,
+      "endereco": "Rua Quintana, 1012 (Hotel Transamérica Berrini)",
+      "horario": "Almoço e jantar",
+      "tipo": "Culinária indiana",
+      "coords": [-46.6942469, -23.6015526],
+      "coords_note": "POI do hotel Transamérica Berrini (Nominatim); restaurante dentro do hotel",
+      "links": { "site": "https://tulsi.com.br/" }
+    },
+    {
+      "id": "portucho",
+      "nome": "Portucho",
+      "destaque": false,
+      "endereco": "Rua Pássaros e Flores, 239",
+      "horario": "Almoço Seg–Sex 12h–15h",
+      "tipo": "Parrilla argentina",
+      "coords": [-46.6908833, -23.6225353],
+      "coords_note": "Nominatim",
+      "links": { "site": "https://portucho.com.br/home-brooklin" }
+    }
+  ]
+}
