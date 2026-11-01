@@ -189,6 +189,47 @@ export default function AdaptaArrival() {
                 conferidas no convite do seu evento.
               </p>
             </section>
+            <section
+              aria-labelledby="arrival-lunch"
+              className="space-y-4 rounded-2xl border border-slate-700 bg-slate-900 p-5 sm:p-7"
+            >
+              <div className="space-y-2">
+                <p className="text-xs uppercase tracking-widest text-amber-300">
+                  Onde almoçar · destaque da organização
+                </p>
+                <h2 id="arrival-lunch" className="text-xl">
+                  Blenz Café · no térreo do próprio prédio
+                </h2>
+                <p className="text-sm leading-relaxed text-slate-300">
+                  Loja 8, térreo do subcondomínio One Berrini Corporate — você não precisa sair do
+                  complexo. Aberto ao público em geral, de segunda a sexta, das 7h às 18h: café da
+                  manhã, almoço e lanche.
+                </p>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <a
+                  className={button}
+                  href="https://blenzcafe.com.br/lojas"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Site do Blenz · lojas ↗
+                </a>
+                <a
+                  className={button}
+                  href="https://www.instagram.com/blenz_cafe/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Instagram · @blenz_cafe ↗
+                </a>
+              </div>
+              <p className="text-xs leading-relaxed text-slate-400">
+                Informações públicas do próprio estabelecimento (site oficial e Instagram). Horários
+                podem variar em feriados e períodos especiais; confirme no dia do seu evento. O
+                destaque é uma sugestão da organização, não um serviço do evento.
+              </p>
+            </section>
             <aside className="space-y-2 rounded-xl border border-amber-700/50 p-5">
               <h2 className="font-medium text-amber-200">
                 {config.entrada_confirmada ? 'Orientações de acesso' : 'Orientação final de acesso'}
