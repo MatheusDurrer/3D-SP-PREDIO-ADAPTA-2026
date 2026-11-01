@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import maplibregl from 'maplibre-gl'
+import { AttributionControl, Map as MapLibreMap, Marker } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 
 export interface LunchSpot {
@@ -62,8 +62,8 @@ export default function LunchMap({
   onSelect: (id: string) => void
 }) {
   const hostRef = useRef<HTMLDivElement>(null)
-  const mapRef = useRef<maplibregl.Map | null>(null)
-  const markersRef = useRef<Map<string, maplibregl.Marker>>(new Map())
+  const mapRef = useRef<MapLibreMap | null>(null)
+  const markersRef = useRef<Map<string, Marker>>(new Map())
   const [glError, setGlError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -74,9 +74,9 @@ export default function LunchMap({
       return
     }
     let disposed = false
-    let map: maplibregl.Map | null = null
+    let map: MapLibreMap | null = null
     try {
-      map = new maplibregl.Map({
+      map = new MapLibreMap({
         container: host,
         style: {
           version: 8,
@@ -94,7 +94,7 @@ export default function LunchMap({
         zoom: 15.5,
         attributionControl: false,
       })
-      map.addControl(new maplibregl.AttributionControl({ compact: true }))
+      map.addControl(new AttributionControl({ compact: true }))
       mapRef.current = map
       map.on('error', () => setGlError('Falha no mapa — exibindo mapa estático da região.'))
     } catch {
@@ -124,7 +124,8 @@ export default function LunchMap({
         el.setAttribute('aria-label', spot.nome)
         el.title = spot.nome
         el.addEventListener('click', () => onSelect(spot.id))
-        new maplibregl.Marker({ element: el }).setLngLat(spot.coords).addTo(map!)
+        const marker = new Marker({ element: el }).setLngLat(spot.coords).addTo(map!)
+        markersRef.current.set(spot.id, marker)
       }
     })
     return () => {
